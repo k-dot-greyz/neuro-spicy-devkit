@@ -1,0 +1,425 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Genesis Block Soundtrack Player</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'SF Mono', 'Monaco', 'Inconsolata', 'Fira Code', monospace;
+            background: linear-gradient(135deg, #0a0a0a 0%, #1a1a2e 100%);
+            color: #00ff88;
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            padding: 2rem;
+        }
+
+        .container {
+            max-width: 1200px;
+            width: 100%;
+        }
+
+        .header {
+            text-align: center;
+            margin-bottom: 3rem;
+            animation: glitch 2s infinite;
+        }
+
+        @keyframes glitch {
+            0%, 100% { text-shadow: 2px 2px 0 #ff00ff, -2px -2px 0 #00ffff; }
+            25% { text-shadow: -2px 2px 0 #ff00ff, 2px -2px 0 #00ffff; }
+            50% { text-shadow: 2px -2px 0 #ff00ff, -2px 2px 0 #00ffff; }
+            75% { text-shadow: -2px -2px 0 #ff00ff, 2px 2px 0 #00ffff; }
+        }
+
+        h1 {
+            font-size: 3rem;
+            margin-bottom: 0.5rem;
+            letter-spacing: 0.2rem;
+        }
+
+        .tagline {
+            font-size: 1rem;
+            color: #888;
+            font-style: italic;
+        }
+
+        .player-section {
+            background: rgba(0, 0, 0, 0.7);
+            border: 1px solid #00ff88;
+            border-radius: 10px;
+            padding: 2rem;
+            margin-bottom: 2rem;
+            box-shadow: 0 0 30px rgba(0, 255, 136, 0.3);
+        }
+
+        .primary-anthem {
+            text-align: center;
+            margin-bottom: 2rem;
+        }
+
+        .anthem-title {
+            font-size: 1.5rem;
+            margin-bottom: 0.5rem;
+            color: #fff;
+        }
+
+        .anthem-artist {
+            color: #00ff88;
+            font-size: 1.2rem;
+        }
+
+        .youtube-embed {
+            position: relative;
+            padding-bottom: 56.25%;
+            height: 0;
+            overflow: hidden;
+            margin: 2rem 0;
+            border-radius: 10px;
+            border: 2px solid #00ff88;
+        }
+
+        .youtube-embed iframe {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            border-radius: 8px;
+        }
+
+        .playlist-link {
+            display: inline-block;
+            background: linear-gradient(45deg, #00ff88, #00ccff);
+            color: #000;
+            padding: 1rem 2rem;
+            text-decoration: none;
+            border-radius: 5px;
+            font-weight: bold;
+            transition: all 0.3s;
+            margin: 1rem 0;
+        }
+
+        .playlist-link:hover {
+            transform: scale(1.05);
+            box-shadow: 0 0 20px rgba(0, 255, 136, 0.5);
+        }
+
+        .cognitive-states {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 1.5rem;
+            margin-top: 2rem;
+        }
+
+        .state-card {
+            background: rgba(0, 255, 136, 0.1);
+            border: 1px solid #00ff88;
+            border-radius: 8px;
+            padding: 1.5rem;
+            transition: all 0.3s;
+            cursor: pointer;
+        }
+
+        .state-card:hover {
+            background: rgba(0, 255, 136, 0.2);
+            transform: translateY(-5px);
+            box-shadow: 0 10px 30px rgba(0, 255, 136, 0.3);
+        }
+
+        .state-card.active {
+            background: rgba(0, 255, 136, 0.3);
+            border-color: #fff;
+        }
+
+        .state-icon {
+            font-size: 2rem;
+            margin-bottom: 0.5rem;
+        }
+
+        .state-name {
+            font-size: 1.2rem;
+            margin-bottom: 0.5rem;
+            color: #fff;
+        }
+
+        .state-description {
+            font-size: 0.9rem;
+            color: #aaa;
+            margin-bottom: 0.5rem;
+        }
+
+        .state-bpm {
+            font-size: 0.8rem;
+            color: #00ff88;
+        }
+
+        .visualizer {
+            height: 100px;
+            background: rgba(0, 0, 0, 0.5);
+            border-radius: 5px;
+            margin: 2rem 0;
+            display: flex;
+            align-items: flex-end;
+            justify-content: space-around;
+            padding: 10px;
+        }
+
+        .bar {
+            width: 3px;
+            background: linear-gradient(to top, #00ff88, #00ccff);
+            animation: pulse 1s ease-in-out infinite;
+        }
+
+        @keyframes pulse {
+            0%, 100% { height: 20%; }
+            50% { height: 80%; }
+        }
+
+        .bar:nth-child(odd) { animation-delay: 0.1s; }
+        .bar:nth-child(even) { animation-delay: 0.2s; }
+        .bar:nth-child(3n) { animation-delay: 0.3s; }
+
+        .controls {
+            display: flex;
+            justify-content: center;
+            gap: 1rem;
+            margin: 2rem 0;
+        }
+
+        .control-btn {
+            background: transparent;
+            border: 1px solid #00ff88;
+            color: #00ff88;
+            padding: 0.5rem 1rem;
+            border-radius: 5px;
+            cursor: pointer;
+            transition: all 0.3s;
+            font-family: inherit;
+        }
+
+        .control-btn:hover {
+            background: #00ff88;
+            color: #000;
+        }
+
+        .guidelines {
+            background: rgba(0, 0, 0, 0.5);
+            border-left: 3px solid #00ff88;
+            padding: 1rem;
+            margin: 2rem 0;
+        }
+
+        .guidelines h3 {
+            margin-bottom: 1rem;
+            color: #fff;
+        }
+
+        .guidelines ul {
+            list-style: none;
+            padding-left: 1rem;
+        }
+
+        .guidelines li {
+            margin: 0.5rem 0;
+            position: relative;
+        }
+
+        .guidelines li:before {
+            content: "▸";
+            position: absolute;
+            left: -1rem;
+            color: #00ff88;
+        }
+
+        .footer {
+            text-align: center;
+            margin-top: 3rem;
+            padding-top: 2rem;
+            border-top: 1px solid #333;
+            color: #666;
+        }
+
+        .quote {
+            font-style: italic;
+            font-size: 1.1rem;
+            color: #00ff88;
+            margin-top: 1rem;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <h1>GENESIS BLOCK</h1>
+            <p class="tagline">System Audio Profile for Empire Construction</p>
+        </div>
+
+        <div class="player-section">
+            <div class="primary-anthem">
+                <h2 class="anthem-title">Primary Anthem</h2>
+                <p class="anthem-artist">The Glitch Mob - We Can Make the World Stop</p>
+                
+                <div class="youtube-embed">
+                    <iframe 
+                        src="https://www.youtube.com/embed/H-k_Eg7zXuc" 
+                        frameborder="0" 
+                        allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" 
+                        allowfullscreen>
+                    </iframe>
+                </div>
+
+                <a href="https://music.youtube.com/playlist?list=PLvKgYUw_tuTudYkcfgWCc_e9OyDhfFFSI" 
+                   target="_blank" 
+                   class="playlist-link">
+                    Access greyZ Foundry OS Playlist →
+                </a>
+            </div>
+
+            <div class="visualizer">
+                <div class="bar" style="animation-delay: 0s;"></div>
+                <div class="bar" style="animation-delay: 0.1s;"></div>
+                <div class="bar" style="animation-delay: 0.2s;"></div>
+                <div class="bar" style="animation-delay: 0.3s;"></div>
+                <div class="bar" style="animation-delay: 0.4s;"></div>
+                <div class="bar" style="animation-delay: 0.5s;"></div>
+                <div class="bar" style="animation-delay: 0.6s;"></div>
+                <div class="bar" style="animation-delay: 0.7s;"></div>
+                <div class="bar" style="animation-delay: 0.8s;"></div>
+                <div class="bar" style="animation-delay: 0.9s;"></div>
+                <div class="bar" style="animation-delay: 1s;"></div>
+                <div class="bar" style="animation-delay: 1.1s;"></div>
+                <div class="bar" style="animation-delay: 1.2s;"></div>
+                <div class="bar" style="animation-delay: 1.3s;"></div>
+                <div class="bar" style="animation-delay: 1.4s;"></div>
+                <div class="bar" style="animation-delay: 0s;"></div>
+                <div class="bar" style="animation-delay: 0.1s;"></div>
+                <div class="bar" style="animation-delay: 0.2s;"></div>
+                <div class="bar" style="animation-delay: 0.3s;"></div>
+                <div class="bar" style="animation-delay: 0.4s;"></div>
+            </div>
+
+            <div class="controls">
+                <button class="control-btn" onclick="setMood('focus')">Deep Focus Mode</button>
+                <button class="control-btn" onclick="setMood('flow')">Flow State</button>
+                <button class="control-btn" onclick="setMood('debug')">Debug Mode</button>
+                <button class="control-btn" onclick="setMood('deploy')">Deployment</button>
+            </div>
+        </div>
+
+        <h2 style="text-align: center; margin: 2rem 0; color: #fff;">Cognitive State Management</h2>
+        
+        <div class="cognitive-states">
+            <div class="state-card" onclick="selectState(this, 'initialization')">
+                <div class="state-icon">🚀</div>
+                <div class="state-name">Initialization</div>
+                <div class="state-description">System boot and mental preparation</div>
+                <div class="state-bpm">BPM: 120-140</div>
+            </div>
+
+            <div class="state-card" onclick="selectState(this, 'deep-focus')">
+                <div class="state-icon">🧠</div>
+                <div class="state-name">Deep Focus</div>
+                <div class="state-description">Complex problem solving</div>
+                <div class="state-bpm">BPM: 100-120</div>
+            </div>
+
+            <div class="state-card" onclick="selectState(this, 'flow-state')">
+                <div class="state-icon">⚡</div>
+                <div class="state-name">Flow State</div>
+                <div class="state-description">Sustained coding sessions</div>
+                <div class="state-bpm">BPM: 125-135</div>
+            </div>
+
+            <div class="state-card" onclick="selectState(this, 'debugging')">
+                <div class="state-icon">🔍</div>
+                <div class="state-name">Debugging</div>
+                <div class="state-description">Detailed analysis</div>
+                <div class="state-bpm">BPM: 80-100</div>
+            </div>
+
+            <div class="state-card" onclick="selectState(this, 'deployment')">
+                <div class="state-icon">🚢</div>
+                <div class="state-name">Deployment</div>
+                <div class="state-description">Launch preparation</div>
+                <div class="state-bpm">BPM: 130-150</div>
+            </div>
+        </div>
+
+        <div class="guidelines">
+            <h3>Usage Guidelines</h3>
+            <ul>
+                <li>Match the track to the task</li>
+                <li>Use the audio environment to manage your cognitive state</li>
+                <li>Adjust volume to maintain focus without fatigue</li>
+                <li>Take audio breaks every 90 minutes for optimal performance</li>
+                <li>Use noise-cancelling headphones for maximum immersion</li>
+            </ul>
+        </div>
+
+        <div class="footer">
+            <p>The Genesis Block Soundtrack v1.0.0</p>
+            <p class="quote">"We can make the world stop" - not by pausing, but by achieving such focus that time becomes irrelevant.</p>
+        </div>
+    </div>
+
+    <script>
+        function selectState(element, state) {
+            // Remove active class from all cards
+            document.querySelectorAll('.state-card').forEach(card => {
+                card.classList.remove('active');
+            });
+            
+            // Add active class to clicked card
+            element.classList.add('active');
+            
+            // Log state change (in production, this would trigger playlist changes)
+            console.log(`Cognitive state changed to: ${state}`);
+            
+            // Visual feedback
+            element.style.animation = 'pulse 0.5s';
+            setTimeout(() => {
+                element.style.animation = '';
+            }, 500);
+        }
+
+        function setMood(mood) {
+            console.log(`Setting mood to: ${mood}`);
+            
+            // Find and activate the corresponding state card
+            const stateMap = {
+                'focus': 'deep-focus',
+                'flow': 'flow-state',
+                'debug': 'debugging',
+                'deploy': 'deployment'
+            };
+            
+            const stateCards = document.querySelectorAll('.state-card');
+            stateCards.forEach(card => {
+                if (card.onclick.toString().includes(stateMap[mood])) {
+                    card.click();
+                }
+            });
+        }
+
+        // Animate bars on page load
+        window.addEventListener('load', () => {
+            const bars = document.querySelectorAll('.bar');
+            bars.forEach((bar, index) => {
+                bar.style.height = Math.random() * 80 + 20 + '%';
+                setInterval(() => {
+                    bar.style.height = Math.random() * 80 + 20 + '%';
+                }, 1000 + index * 100);
+            });
+        });
+    </script>
+</body>
+</html>
