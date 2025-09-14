@@ -1,5 +1,5 @@
 # neuro-spicy-devkit
-init the blueprint 
+init blueprint 
 
 # The Neuro-Spicy Devkit: An API for a Different Processor
 
