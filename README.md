@@ -19,7 +19,3 @@ This is not a self-help guide. It's a devkit. We are not "broken" people needing
 ## Who is this for?
 
 For the ADHD coder who has 150 browser tabs open. For the autistic systems thinker who needs to script their social interactions. For anyone who feels like they're trying to run `macOS` on `x86` hardware and wondering why it keeps kernel panicking.
-
----
-
-How does that feel for a starting point? We can tweak it, but it sets a damn good tone. Just getting that into the repo gives the whole project a backbone.
