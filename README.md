@@ -19,3 +19,36 @@ This is not a self-help guide. It's a devkit. We are not "broken" people needing
 ## Who is this for?
 
 For the ADHD coder who has 150 browser tabs open. For the autistic systems thinker who needs to script their social interactions. For anyone who feels like they're trying to run `macOS` on `x86` hardware and wondering why it keeps kernel panicking.
+
+## 🚀 Dev Environment Setup
+
+**Your One Anchor Point for All Development Setups**
+
+The most painful part of development? Environment setup. We've solved that.
+
+### **One-Command Setup (Any Environment)**
+```bash
+git clone https://github.com/kasparsgreizis/zenOS.git && cd zenOS && python setup.py
+```
+
+### **Quick Reference**
+- **[Complete Guide](DEV_ENVIRONMENT_SETUP.md)** - Your anchor point for all dev setups
+- **[Cheat Sheet](DEV_SETUP_CHEAT_SHEET.md)** - One-page quick reference
+- **[Smart Commands](get_setup_commands.py)** - Get environment-specific setup commands
+
+### **Neuro-Spicy Features**
+- **Hyperfocus-Friendly**: One command, no decision fatigue
+- **Context-Switching Support**: Phase-based, resumable setup
+- **Sensory-Friendly**: Minimal output, predictable behavior
+- **Executive Function Support**: AI-powered troubleshooting
+
+### **Get Started**
+```bash
+# Get commands for your environment
+python get_setup_commands.py
+
+# Or just run the one-command setup
+git clone https://github.com/kasparsgreizis/zenOS.git && cd zenOS && python setup.py
+```
+
+*"Turning environment setup bugs into features, one setup at a time."*
