@@ -28,19 +28,27 @@ The most painful part of development? Environment setup. We've solved that.
 
 ### **One-Command Setup (Any Environment)**
 ```bash
+# Option 1: Full zenOS setup (includes everything)
 git clone https://github.com/kasparsgreizis/zenOS.git && cd zenOS && python setup.py
+
+# Option 2: Portable Dev Environment (Cursor/VSCode optimized)
+git clone https://github.com/kasparsgreizis/neuro-spicy-devkit.git && cd neuro-spicy-devkit
+./portable-dev-env/scripts/setup.sh --platform linux --components all
 ```
 
 ### **Quick Reference**
 - **[Complete Guide](DEV_ENVIRONMENT_SETUP.md)** - Your anchor point for all dev setups
 - **[Cheat Sheet](DEV_SETUP_CHEAT_SHEET.md)** - One-page quick reference
 - **[Smart Commands](get_setup_commands.py)** - Get environment-specific setup commands
+- **[Portable Dev Environment](portable-dev-env/README.md)** - Cross-platform Cursor/VSCode setup
 
 ### **Neuro-Spicy Features**
 - **Hyperfocus-Friendly**: One command, no decision fatigue
 - **Context-Switching Support**: Phase-based, resumable setup
 - **Sensory-Friendly**: Minimal output, predictable behavior
 - **Executive Function Support**: AI-powered troubleshooting
+- **AI-Optimized**: Casual, engaging AI interaction tailored for ADHD/autism
+- **Portable**: Deploy anywhere, share via GitHub Gists
 
 ### **Get Started**
 ```bash
@@ -49,6 +57,9 @@ python get_setup_commands.py
 
 # Or just run the one-command setup
 git clone https://github.com/kasparsgreizis/zenOS.git && cd zenOS && python setup.py
+
+# Or setup portable dev environment
+./portable-dev-env/scripts/setup.sh --platform linux --components all
 ```
 
 *"Turning environment setup bugs into features, one setup at a time."*
