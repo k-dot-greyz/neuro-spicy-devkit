@@ -1,0 +1,352 @@
+{
+  "profile": {
+    "name": "Frontend Developer",
+    "version": "1.0.0",
+    "description": "React, TypeScript, Tailwind, Storybook workflow for modern frontend development",
+    "author": "Neuro-Spicy DevKit",
+    "tags": ["frontend", "react", "typescript", "ui", "web"],
+    "compatibility": {
+      "platforms": ["windows", "linux", "macos"],
+      "minVersion": "1.0.0"
+    },
+    "estimatedSetupTime": "2-3 minutes",
+    "difficulty": "beginner"
+  },
+  "requirements": {
+    "nodejs": ">=18.0.0",
+    "npm": ">=8.0.0",
+    "git": ">=2.30.0"
+  },
+  "plugins": {
+    "tools": [
+      {
+        "name": "nodejs",
+        "version": "18.17.0",
+        "install": "npm install -g @nodejs/core",
+        "config": {
+          "packageManager": "npm",
+          "registry": "https://registry.npmjs.org/",
+          "engines": {
+            "node": ">=18.0.0"
+          }
+        }
+      },
+      {
+        "name": "typescript",
+        "version": "5.0.0",
+        "install": "npm install -g typescript",
+        "config": {
+          "strict": true,
+          "target": "ES2022",
+          "module": "ESNext",
+          "moduleResolution": "node",
+          "esModuleInterop": true,
+          "allowSyntheticDefaultImports": true,
+          "jsx": "react-jsx"
+        }
+      },
+      {
+        "name": "react",
+        "version": "18.2.0",
+        "install": "npm install react react-dom",
+        "config": {
+          "strictMode": true,
+          "concurrentFeatures": true
+        }
+      },
+      {
+        "name": "tailwindcss",
+        "version": "3.3.0",
+        "install": "npm install -D tailwindcss postcss autoprefixer",
+        "config": {
+          "content": ["./src/**/*.{js,jsx,ts,tsx}"],
+          "theme": {
+            "extend": {}
+          },
+          "plugins": []
+        }
+      },
+      {
+        "name": "storybook",
+        "version": "7.0.0",
+        "install": "npx storybook@latest init",
+        "config": {
+          "framework": "react",
+          "typescript": true,
+          "tailwind": true
+        }
+      }
+    ],
+    "editors": [
+      {
+        "name": "cursor",
+        "config": {
+          "mcpServers": {
+            "git": {
+              "command": "git-mcp-server",
+              "args": [],
+              "env": {
+                "GIT_USER_NAME": "{{user.name}}",
+                "GIT_USER_EMAIL": "{{user.email}}"
+              }
+            },
+            "filesystem": {
+              "command": "mcp-server-filesystem",
+              "args": [],
+              "env": {}
+            },
+            "shadcn": {
+              "command": "node",
+              "args": ["/usr/local/lib/node_modules/@jpisnice/shadcn-ui-mcp-server/build/index.js"],
+              "env": {
+                "GITHUB_PERSONAL_ACCESS_TOKEN": "{{user.githubToken}}"
+              }
+            }
+          },
+          "settings": {
+            "editor.formatOnSave": true,
+            "editor.codeActionsOnSave": {
+              "source.fixAll.eslint": true,
+              "source.organizeImports": true
+            },
+            "typescript.preferences.importModuleSpecifier": "relative",
+            "emmet.includeLanguages": {
+              "typescript": "html",
+              "typescriptreact": "html"
+            }
+          }
+        }
+      }
+    ],
+    "mcps": [
+      {
+        "name": "git-mcp-server",
+        "package": "@cyanheads/git-mcp-server",
+        "config": {
+          "defaultBranch": "main",
+          "autoCommit": false,
+          "commitMessageTemplate": "feat: {{description}}"
+        }
+      },
+      {
+        "name": "filesystem-mcp-server",
+        "package": "@modelcontextprotocol/server-filesystem",
+        "config": {
+          "allowedPaths": ["./src", "./public", "./docs"],
+          "readOnly": false
+        }
+      },
+      {
+        "name": "shadcn-ui-mcp-server",
+        "package": "@jpisnice/shadcn-ui-mcp-server",
+        "config": {
+          "framework": "react",
+          "styling": "tailwind",
+          "typescript": true,
+          "componentsPath": "./src/components/ui"
+        }
+      }
+    ]
+  },
+  "shell": {
+    "bash": {
+      "aliases": {
+        "dev": "npm run dev",
+        "build": "npm run build",
+        "test": "npm run test",
+        "storybook": "npm run storybook",
+        "lint": "npm run lint",
+        "type-check": "npm run type-check"
+      },
+      "functions": {
+        "create-react-app": "npx create-react-app $1 --template typescript",
+        "create-next-app": "npx create-next-app@latest $1 --typescript --tailwind --eslint",
+        "add-component": "npx shadcn-ui@latest add $1"
+      },
+      "env": {
+        "NODE_ENV": "development",
+        "REACT_APP_ENV": "development"
+      }
+    },
+    "powershell": {
+      "aliases": {
+        "dev": "npm run dev",
+        "build": "npm run build",
+        "test": "npm run test",
+        "storybook": "npm run storybook",
+        "lint": "npm run lint",
+        "type-check": "npm run type-check"
+      },
+      "functions": {
+        "create-react-app": "npx create-react-app $args[0] --template typescript",
+        "create-next-app": "npx create-next-app@latest $args[0] --typescript --tailwind --eslint",
+        "add-component": "npx shadcn-ui@latest add $args[0]"
+      },
+      "env": {
+        "NODE_ENV": "development",
+        "REACT_APP_ENV": "development"
+      }
+    }
+  },
+  "workspace": {
+    "folders": [
+      {
+        "name": "src",
+        "path": "./src",
+        "type": "source",
+        "description": "Source code directory"
+      },
+      {
+        "name": "components",
+        "path": "./src/components",
+        "type": "components",
+        "description": "React components"
+      },
+      {
+        "name": "pages",
+        "path": "./src/pages",
+        "type": "pages",
+        "description": "Page components"
+      },
+      {
+        "name": "hooks",
+        "path": "./src/hooks",
+        "type": "hooks",
+        "description": "Custom React hooks"
+      },
+      {
+        "name": "utils",
+        "path": "./src/utils",
+        "type": "utils",
+        "description": "Utility functions"
+      },
+      {
+        "name": "public",
+        "path": "./public",
+        "type": "public",
+        "description": "Public assets"
+      }
+    ],
+    "settings": {
+      "editor.formatOnSave": true,
+      "editor.codeActionsOnSave": {
+        "source.fixAll.eslint": true,
+        "source.organizeImports": true
+      },
+      "typescript.preferences.importModuleSpecifier": "relative",
+      "emmet.includeLanguages": {
+        "typescript": "html",
+        "typescriptreact": "html"
+      },
+      "tailwindCSS.includeLanguages": {
+        "typescript": "html",
+        "typescriptreact": "html"
+      },
+      "tailwindCSS.experimental.classRegex": [
+        ["cva\\(([^)]*)\\)", "[\"'`]([^\"'`]*).*?[\"'`]"],
+        ["cx\\(([^)]*)\\)", "(?:'|\"|`)([^']*)(?:'|\"|`)"]
+      ]
+    }
+  },
+  "scripts": {
+    "setup": [
+      "npm install",
+      "npm run setup:typescript",
+      "npm run setup:tailwind",
+      "npm run setup:storybook",
+      "npm run setup:eslint"
+    ],
+    "dev": "npm run dev",
+    "build": "npm run build",
+    "test": "npm run test",
+    "storybook": "npm run storybook",
+    "lint": "npm run lint",
+    "type-check": "npm run type-check"
+  },
+  "templates": {
+    "package.json": {
+      "name": "{{project.name}}",
+      "version": "0.1.0",
+      "private": true,
+      "dependencies": {
+        "react": "^18.2.0",
+        "react-dom": "^18.2.0",
+        "typescript": "^5.0.0"
+      },
+      "devDependencies": {
+        "@types/react": "^18.2.0",
+        "@types/react-dom": "^18.2.0",
+        "@typescript-eslint/eslint-plugin": "^6.0.0",
+        "@typescript-eslint/parser": "^6.0.0",
+        "eslint": "^8.45.0",
+        "eslint-plugin-react": "^7.33.0",
+        "eslint-plugin-react-hooks": "^4.6.0",
+        "tailwindcss": "^3.3.0",
+        "postcss": "^8.4.0",
+        "autoprefixer": "^10.4.0"
+      },
+      "scripts": {
+        "dev": "react-scripts start",
+        "build": "react-scripts build",
+        "test": "react-scripts test",
+        "eject": "react-scripts eject",
+        "lint": "eslint src --ext .ts,.tsx",
+        "type-check": "tsc --noEmit",
+        "storybook": "storybook dev -p 6006",
+        "build-storybook": "storybook build"
+      }
+    },
+    "tsconfig.json": {
+      "compilerOptions": {
+        "target": "ES2022",
+        "lib": ["dom", "dom.iterable", "es6"],
+        "allowJs": true,
+        "skipLibCheck": true,
+        "esModuleInterop": true,
+        "allowSyntheticDefaultImports": true,
+        "strict": true,
+        "forceConsistentCasingInFileNames": true,
+        "noFallthroughCasesInSwitch": true,
+        "module": "esnext",
+        "moduleResolution": "node",
+        "resolveJsonModule": true,
+        "isolatedModules": true,
+        "noEmit": true,
+        "jsx": "react-jsx"
+      },
+      "include": ["src"]
+    },
+    "tailwind.config.js": {
+      "content": ["./src/**/*.{js,jsx,ts,tsx}"],
+      "theme": {
+        "extend": {}
+      },
+      "plugins": []
+    }
+  },
+  "documentation": {
+    "gettingStarted": "This profile sets up a modern React development environment with TypeScript, Tailwind CSS, and Storybook.",
+    "features": [
+      "React 18 with TypeScript",
+      "Tailwind CSS for styling",
+      "Storybook for component development",
+      "ESLint for code quality",
+      "Git MCP for version control",
+      "Filesystem MCP for file operations",
+      "Shadcn/UI MCP for component library"
+    ],
+    "commonTasks": [
+      "Create new React components",
+      "Style components with Tailwind",
+      "Develop components in Storybook",
+      "Run type checking",
+      "Lint and format code",
+      "Build for production"
+    ],
+    "troubleshooting": {
+      "typescriptErrors": "Run 'npm run type-check' to see TypeScript errors",
+      "tailwindNotWorking": "Make sure Tailwind is imported in your CSS file",
+      "storybookIssues": "Run 'npm run storybook' to start Storybook development server"
+    }
+  }
+}
