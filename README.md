@@ -31,18 +31,21 @@ The most painful part of development? Environment setup. We've solved that with 
 # Clone and setup
 git clone https://github.com/yourusername/neuro-spicy-devkit.git && cd neuro-spicy-devkit
 
+# Make scripts executable
+chmod +x scripts/*.sh
+
 # Check environment
-./scripts/health-check-core.ps1
+./scripts/health-check-core.sh
 
 # Setup core essentials
-./scripts/neuro-spicy-setup-core.ps1 --components core
+./scripts/neuro-spicy-setup-core.sh --components core
 ```
 
 ### **Core Commands (That's It!)**
 ```bash
-./scripts/health-check-core.ps1                    # Check environment
-./scripts/neuro-spicy-setup-core.ps1 --components core  # Setup environment
-./scripts/git-push-retry.ps1 -Branch main         # Reliable git operations
+./scripts/health-check-core.sh                    # Check environment
+./scripts/neuro-spicy-setup-core.sh --components core  # Setup environment
+./scripts/git-push-retry.sh --branch main         # Reliable git operations
 ```
 
 ### **Neuro-Spicy Core Features**

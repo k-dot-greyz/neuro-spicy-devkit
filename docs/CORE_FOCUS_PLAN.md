@@ -149,9 +149,9 @@ neuro-spicy-devkit/
 
 ```bash
 # The only commands users need to know:
-./health-check.ps1                    # Check environment
-./neuro-spicy-setup.ps1 --components core  # Setup environment
-./git-push-retry.ps1 -Branch main     # Reliable git operations
+./scripts/health-check-core.sh                    # Check environment
+./scripts/neuro-spicy-setup-core.sh --components core  # Setup environment
+./scripts/git-push-retry.sh --branch main         # Reliable git operations
 ```
 
 ## **🚀 BOTTOM LINE**
