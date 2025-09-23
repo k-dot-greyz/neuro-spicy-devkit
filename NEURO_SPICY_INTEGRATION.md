@@ -88,7 +88,7 @@ Your neuro-spicy-devkit philosophy of "turning bugs into features" perfectly ali
 ### **Setup Neuro-Spicy Dev Environment**
 ```bash
 # Clone the neuro-spicy-devkit
-git clone https://github.com/kasparsgreizis/neuro-spicy-devkit.git
+git clone https://github.com/yourusername/neuro-spicy-devkit.git
 cd neuro-spicy-devkit
 
 # Setup portable dev environment
@@ -171,3 +171,4 @@ You now have a **neuro-spicy development environment** that:
 ---
 
 *"Turning environment setup bugs into features, one neuro-spicy setup at a time."*
+

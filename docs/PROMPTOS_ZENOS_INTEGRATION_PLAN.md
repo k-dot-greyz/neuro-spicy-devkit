@@ -43,7 +43,7 @@ procedures:
       - "Focus management tools"
       - "Sensory optimization"
       - "Executive function support"
-    discovered_by: "human:kaspars"
+    discovered_by: "human:yourname"
     achievements_unlocked:
       - "Environment Master"
       - "Focus Champion"
@@ -261,3 +261,4 @@ echo "🎮 Your neuro-spicy devkit is now a full AI operating system!"
 4. **Full AI OS**: Complete operating system for neuro-spicy development
 
 **This is the difference between a basic devkit and a revolutionary neuro-spicy AI operating system!** 🚀🧠✨
+

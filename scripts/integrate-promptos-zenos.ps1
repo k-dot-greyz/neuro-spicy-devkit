@@ -169,7 +169,7 @@ function Install-ProcedurePokédex {
                     "sensory_optimization" = 92
                 }
                 "requirements" = @("Focus management tools", "Sensory optimization", "Executive function support")
-                "discovered_by" = "human:kaspars"
+                "discovered_by" = "human:yourname"
                 "achievements_unlocked" = @("Environment Master", "Focus Champion", "Neuro-Spicy Pioneer", "Sensory Optimizer")
             }
             @{
@@ -587,3 +587,4 @@ if (Test-Integration) {
     Write-ColorOutput "❌ Integration failed. Please check the errors above." "Red"
     exit 1
 }
+

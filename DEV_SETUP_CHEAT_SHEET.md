@@ -4,7 +4,7 @@
 
 ## **One-Command Setup (Any Environment)**
 ```bash
-git clone https://github.com/kasparsgreizis/zenOS.git && cd zenOS && python setup.py
+git clone https://github.com/yourusername/zenOS.git && cd zenOS && python setup.py
 ```
 
 ## **Essential Commands**

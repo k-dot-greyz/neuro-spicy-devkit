@@ -197,8 +197,8 @@ setup_cursor_mcp() {
       "command": "git-mcp-server",
       "args": [],
       "env": {
-        "GIT_USER_NAME": "Kaspars Greizis",
-        "GIT_USER_EMAIL": "kaspars.greizis@gmail.com"
+        "GIT_USER_NAME": "Your Name",
+        "GIT_USER_EMAIL": "yourname.yourname@gmail.com"
       }
     },
     "filesystem": {
@@ -372,3 +372,4 @@ fi
 # Show completion summary
 RESULTS="NODEJS=$NODEJS MCP_SERVERS=$MCP_SERVERS CURSOR_MCP=$CURSOR_MCP GITHUB_TOKEN=$GITHUB_TOKEN GISTS=$GISTS"
 show_completion_summary "$RESULTS"
+

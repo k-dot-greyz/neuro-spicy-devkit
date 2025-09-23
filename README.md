@@ -26,7 +26,27 @@ For the ADHD coder who has 150 browser tabs open. For the autistic systems think
 
 The most painful part of development? Environment setup. We've solved that with core essentials only.
 
-### **One-Command Setup (Core Essentials)**
+### **🎯 Interactive Setup (Recommended)**
+```bash
+# Clone and initialize with guided setup
+git clone https://github.com/yourusername/neuro-spicy-devkit.git && cd neuro-spicy-devkit
+
+# Run interactive initialization (Linux/macOS)
+./init.sh
+
+# Or run interactive initialization (Windows)
+.\init.ps1
+```
+
+The interactive setup will guide you through:
+- ✅ Installing dependencies (Node.js, Python)
+- ✅ Configuring Git with your name and email
+- ✅ Setting up GitHub Personal Access Token
+- ✅ Checking development tools (Cursor, VSCode)
+- ✅ Running health checks and core setup
+- ✅ Creating your custom user profile
+
+### **🔧 Manual Setup (Advanced)**
 ```bash
 # Clone and setup
 git clone https://github.com/yourusername/neuro-spicy-devkit.git && cd neuro-spicy-devkit
@@ -62,7 +82,7 @@ chmod +x scripts/*.sh
 python get_setup_commands.py
 
 # Or just run the one-command setup
-git clone https://github.com/kasparsgreizis/zenOS.git && cd zenOS && python setup.py
+git clone https://github.com/yourusername/zenOS.git && cd zenOS && python setup.py
 
 # Or setup portable dev environment
 ./portable-dev-env/scripts/setup.sh --platform linux --components all

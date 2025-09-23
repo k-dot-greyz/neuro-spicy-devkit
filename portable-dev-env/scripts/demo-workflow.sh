@@ -57,7 +57,7 @@ demo_phase_1() {
     echo -e "${YELLOW}BEGINNER: *overwhelmed*${NC}"
     echo ""
     echo -e "${GREEN}NEURO-SPICY: \"Run this one command:\"${NC}"
-    echo -e "${CYAN}git clone https://github.com/kasparsgreizis/neuro-spicy-devkit.git${NC}"
+    echo -e "${CYAN}git clone https://github.com/yourusername/neuro-spicy-devkit.git${NC}"
     echo -e "${CYAN}cd neuro-spicy-devkit${NC}"
     echo -e "${CYAN}./portable-dev-env/scripts/neuro-spicy-setup.sh --components all${NC}"
     echo ""
@@ -88,7 +88,7 @@ demo_phase_2() {
     echo -e "${GREEN}✅ Git: git version 2.51.0${NC}"
     echo -e "${GREEN}✅ Node.js: v20.10.0${NC}"
     echo -e "${GREEN}✅ Python: Python 3.9.13${NC}"
-    echo -e "${GREEN}✅ GitHub Token valid for: kasparsgreizis${NC}"
+    echo -e "${GREEN}✅ GitHub Token valid for: yourusername${NC}"
     echo -e "${GREEN}✅ Cursor found and configured${NC}"
     echo ""
     
@@ -105,7 +105,7 @@ demo_phase_2() {
     echo -e "${CYAN}./portable-dev-env/scripts/gist-manager.sh create my-setup${NC}"
     echo -e "${GREEN}✅ Created gist: my-setup${NC}"
     echo -e "${GREEN}   ID: 75d370965e5a86da7afc434bc46cc551${NC}"
-    echo -e "${GREEN}   URL: https://gist.github.com/kasparsgreizis/75d370965e5a86da7afc434bc46cc551${NC}"
+    echo -e "${GREEN}   URL: https://gist.github.com/yourusername/75d370965e5a86da7afc434bc46cc551${NC}"
     echo ""
     
     echo -e "${YELLOW}BEGINNER: \"I'm not just learning to code... I'm learning to think like a developer!\"${NC}"
@@ -138,7 +138,7 @@ demo_phase_3() {
     log_info "Sharing with team..."
     echo -e "${CYAN}./portable-dev-env/scripts/gist-manager.sh create my-project-config${NC}"
     echo -e "${GREEN}✅ Created gist: my-project-config${NC}"
-    echo -e "${GREEN}   URL: https://gist.github.com/kasparsgreizis/bc807de8a5b9d1f8ade3aaa014e33e2e${NC}"
+    echo -e "${GREEN}   URL: https://gist.github.com/yourusername/bc807de8a5b9d1f8ade3aaa014e33e2e${NC}"
     echo ""
     
     echo -e "${YELLOW}BEGINNER: \"I'm not just a developer... I'm a neuro-spicy developer!\"${NC}"
@@ -214,7 +214,7 @@ show_call_to_action() {
     echo ""
     
     echo -e "${CYAN}# The command that changes everything:${NC}"
-    echo -e "${YELLOW}git clone https://github.com/kasparsgreizis/neuro-spicy-devkit.git${NC}"
+    echo -e "${YELLOW}git clone https://github.com/yourusername/neuro-spicy-devkit.git${NC}"
     echo -e "${YELLOW}cd neuro-spicy-devkit${NC}"
     echo -e "${YELLOW}./portable-dev-env/scripts/neuro-spicy-setup.sh --components all${NC}"
     echo ""
@@ -251,3 +251,4 @@ demo_phase_4
 show_transformation
 show_superpowers
 show_call_to_action
+

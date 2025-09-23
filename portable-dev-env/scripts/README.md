@@ -173,7 +173,7 @@ GitHub Gist integration for team collaboration:
 ### Windows
 ```powershell
 # Clone the repository
-git clone https://github.com/kasparsgreizis/neuro-spicy-devkit.git
+git clone https://github.com/yourusername/neuro-spicy-devkit.git
 cd neuro-spicy-devkit
 
 # Run setup
@@ -183,7 +183,7 @@ cd neuro-spicy-devkit
 ### Linux/macOS
 ```bash
 # Clone the repository
-git clone https://github.com/kasparsgreizis/neuro-spicy-devkit.git
+git clone https://github.com/yourusername/neuro-spicy-devkit.git
 cd neuro-spicy-devkit
 
 # Make scripts executable
@@ -281,3 +281,4 @@ Your neuro-spicy devkit is now ready to turn every environment setup bug into a 
 **This is absolutely LEGENDARY!** 💪🔥🧠
 
 Start coding with your neuro-spicy superpowers! ✨
+

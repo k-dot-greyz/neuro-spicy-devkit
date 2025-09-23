@@ -111,8 +111,8 @@ function Setup-CursorMCP {
                 command = "git-mcp-server"
                 args = @()
                 env = @{
-                    GIT_USER_NAME = "Kaspars Greizis"
-                    GIT_USER_EMAIL = "kaspars.greizis@gmail.com"
+                    GIT_USER_NAME = "Your Name"
+                    GIT_USER_EMAIL = "yourname.yourname@gmail.com"
                 }
             }
             "filesystem" = @{
@@ -274,3 +274,4 @@ if ($Components -eq "all" -or $Components -eq "gists") {
 }
 
 Show-CompletionSummary $Results
+

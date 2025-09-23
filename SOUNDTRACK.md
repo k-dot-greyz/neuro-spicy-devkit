@@ -2,7 +2,7 @@
 
 > **Primary Anthem:** The Glitch Mob - We Can Make the World Stop
 >
-> **The Operational Playlist:** [greyZ Foundry OS](https://music.youtube.com/playlist?list=PLvKgYUw_tuTudYkcfgWCc_e9OyDhfFFSI)
+> **The Operational Playlist:** [yourname Foundry OS](https://music.youtube.com/playlist?list=PLvKgYUw_tuTudYkcfgWCc_e9OyDhfFFSI)
 >
 > This is the official System Audio Profile for the foundry. It is a curated set of frequencies designed to invoke the specific mental states required for the complex tasks of empire construction.
 >
@@ -52,4 +52,5 @@ bin/focus-audio.sh --help
 - **Volume discipline**: Lower for analysis/writing; slightly higher for execution/flow.
 - **Single-source audio**: Avoid competing streams; keep OS alerts minimal during deep work.
 - **Fast reset**: If you stall, switch state with `focus-audio.sh activation` then back to `deep`.
+
 

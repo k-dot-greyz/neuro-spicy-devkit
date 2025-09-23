@@ -8,7 +8,7 @@
 This track serves as the system initialization sequence. It's the sonic signature of beginning something significant - a new project, a critical debugging session, or the moment before deployment.
 
 ## The Operational Playlist
-**[greyZ Foundry OS](https://music.youtube.com/playlist?list=PLvKgYUw_tuTudYkcfgWCc_e9OyDhfFFSI)**
+**[yourname Foundry OS](https://music.youtube.com/playlist?list=PLvKgYUw_tuTudYkcfgWCc_e9OyDhfFFSI)**
 
 The complete operational audio environment for sustained development sessions.
 
