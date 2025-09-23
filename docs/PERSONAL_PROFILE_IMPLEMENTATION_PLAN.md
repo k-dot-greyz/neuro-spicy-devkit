@@ -58,7 +58,7 @@ neuro-spicy-devkit/
 │   │   ├── devops.json
 │   │   └── full-stack.json
 │   └── user/                      # User custom profiles
-│       ├── kaspars-custom.json
+│       ├── user-custom.json
 │       └── team-shared.json
 ├── plugins/                        # Plugin definitions
 │   ├── tools/                     # Tool plugins
@@ -75,7 +75,7 @@ neuro-spicy-devkit/
 │       ├── filesystem-mcp.json
 │       └── brave-search-mcp.json
 └── presets/                       # User presets
-    ├── kaspars-presets/
+    ├── user-presets/
     └── team-presets/
 ```
 

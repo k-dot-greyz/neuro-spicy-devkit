@@ -43,7 +43,7 @@ Neuro-Spicy DevKit: "That's it. Welcome to your superpowers! 🧠✨"
 #### The Magic Moment:
 ```bash
 # They run this ONE command:
-git clone https://github.com/kasparsgreizis/neuro-spicy-devkit.git
+git clone https://github.com/yourusername/neuro-spicy-devkit.git
 cd neuro-spicy-devkit
 ./portable-dev-env/scripts/neuro-spicy-setup.sh --components all
 
@@ -124,7 +124,7 @@ share it with my team, and focus on building cool stuff"
 ### **Day 1: The Setup** 
 ```bash
 # Step 1: Clone the magic
-git clone https://github.com/kasparsgreizis/neuro-spicy-devkit.git
+git clone https://github.com/yourusername/neuro-spicy-devkit.git
 cd neuro-spicy-devkit
 
 # Step 2: Make it executable (Linux/macOS)
@@ -307,7 +307,7 @@ Day 7: Become a neuro-spicy developer advocate
 
 ```bash
 # The command that changes everything:
-git clone https://github.com/kasparsgreizis/neuro-spicy-devkit.git
+git clone https://github.com/yourusername/neuro-spicy-devkit.git
 cd neuro-spicy-devkit
 ./portable-dev-env/scripts/neuro-spicy-setup.sh --components all
 

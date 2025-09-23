@@ -49,7 +49,7 @@
 │  Personal        │  Team           │  Presets        │  Sharing   │
 │  Profiles        │  Profiles       │                │            │
 │                  │                  │                │            │
-│  • kaspars-      │  • team-        │  • my-         │  • GitHub  │
+│  • user-         │  • team-        │  • my-         │  • GitHub  │
 │    custom.json   │    frontend.json │    aliases     │    Gists   │
 │  • my-react-     │  • company-     │  • my-         │  • URLs    │
 │    setup.json    │    standards.json│    shortcuts   │  • Export  │

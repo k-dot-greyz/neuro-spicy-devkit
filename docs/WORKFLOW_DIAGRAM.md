@@ -72,7 +72,7 @@ NEURO-SPICY ADVOCATE: "I spread the word about accessible development"
 
 ### **Step 1: The Magic Command**
 ```bash
-git clone https://github.com/kasparsgreizis/neuro-spicy-devkit.git
+git clone https://github.com/yourusername/neuro-spicy-devkit.git
 cd neuro-spicy-devkit
 ./portable-dev-env/scripts/neuro-spicy-setup.sh --components all
 ```
@@ -243,7 +243,7 @@ NEURO-SPICY ADVOCATE: Spreads the word about accessible development
 
 ```bash
 # The command that changes everything:
-git clone https://github.com/kasparsgreizis/neuro-spicy-devkit.git
+git clone https://github.com/yourusername/neuro-spicy-devkit.git
 cd neuro-spicy-devkit
 ./portable-dev-env/scripts/neuro-spicy-setup.sh --components all
 
