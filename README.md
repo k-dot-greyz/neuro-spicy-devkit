@@ -1,91 +1,117 @@
-# neuro-spicy-devkit
-init blueprint 
+# 🧠 Neuro-Spicy DevKit
 
-# The Neuro-Spicy Devkit: An API for a Different Processor
+[![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
+[![Cross-Platform](https://img.shields.io/badge/Platform-Windows%20%7C%20Linux%20%7C%20macOS-blue.svg)](https://github.com/yourusername/neuro-spicy-devkit)
 
-## Core Philosophy
+**Neuro-Spicy DevKit** is a lean, mean development environment setup tool designed for ADHD/autism-friendly workflows. It provides a clean, portable development environment that can be easily customized and shared.
 
-This is not a self-help guide. It's a devkit. We are not "broken" people needing to be fixed. We are running a different, highly-specialized operating system on different hardware. This devkit is a collection of drivers, utilities, and community-tested middleware to help us interface with a world built for a more common OS.
+## ✨ Features
 
-**Motto:** _Turning bugs into features._
+- 🚀 **One-Command Setup**: Interactive initialization with guided prompts
+- 🔧 **Cross-Platform**: Windows (PowerShell) and Linux/macOS (Bash) support
+- 📦 **Portable**: Easy to clone, customize, and share
+- 🎯 **Lean & Mean**: Focused on essential tools only
+- 🔒 **Secure**: MIT licensed with no personal data collection
+- 🌈 **Customizable**: JSON-based profile system for different workflows
+- 📚 **Well-Documented**: Clear guides for beginners and advanced users
 
-## Guiding Principles
+## 🚀 Quick Start
 
-1.  **Embrace the Architecture:** Our "bugs" (hyperfocus, sensitivity, pattern-matching obsession, context-switching latency) are features. The goal is not to suppress them, but to understand their APIs and write code that leverages them.
-2.  **Pragmatism over Theory:** If a hack works, it works. This is a space for practical, DIY solutions that solve real problems, not for endless theoretical debates.
-3.  **Forking is Encouraged:** This is open source for the self. Take what you need, adapt it, and build your own custom "distro." There is no one-size-fits-all solution.
-4.  **Documentation is Self-Respect:** We document our personal APIs, our mental models, and our environmental configs because future-us will need it. It's an act of kindness to the person you will be tomorrow.
+### Prerequisites
 
-## Who is this for?
+- **Windows**: PowerShell 5.1+ or PowerShell Core
+- **Linux/macOS**: Bash shell
+- **Git**: For version control
+- **Node.js**: For MCP servers (optional)
 
-For the ADHD coder who has 150 browser tabs open. For the autistic systems thinker who needs to script their social interactions. For anyone who feels like they're trying to run `macOS` on `x86` hardware and wondering why it keeps kernel panicking.
+### Installation
 
-## 🚀 Core Essentials Setup
+`ash
+# Clone the repository
+git clone https://github.com/yourusername/neuro-spicy-devkit.git
+cd neuro-spicy-devkit
 
-**Lean, Focused Development Environment**
-
-The most painful part of development? Environment setup. We've solved that with core essentials only.
-
-### **🎯 Interactive Setup (Recommended)**
-```bash
-# Clone and initialize with guided setup
-git clone https://github.com/yourusername/neuro-spicy-devkit.git && cd neuro-spicy-devkit
-
-# Run interactive initialization (Linux/macOS)
-./init.sh
-
-# Or run interactive initialization (Windows)
+# Run the interactive setup
+# Windows
 .\init.ps1
-```
+
+# Linux/macOS
+./init.sh
+`
 
 The interactive setup will guide you through:
-- ✅ Installing dependencies (Node.js, Python)
-- ✅ Configuring Git with your name and email
-- ✅ Setting up GitHub Personal Access Token
-- ✅ Checking development tools (Cursor, VSCode)
-- ✅ Running health checks and core setup
-- ✅ Creating your custom user profile
+1. **Git Configuration** - Set up your name and email
+2. **GitHub Token** - Configure GitHub authentication
+3. **Cursor Setup** - Configure AI-powered development
+4. **Health Check** - Verify all tools are working
 
-### **🔧 Manual Setup (Advanced)**
-```bash
-# Clone and setup
-git clone https://github.com/yourusername/neuro-spicy-devkit.git && cd neuro-spicy-devkit
+## 📁 Project Structure
 
-# Make scripts executable
-chmod +x scripts/*.sh
+`
+neuro-spicy-devkit/
+├── init.ps1                     # Windows quick launcher
+├── init.sh                      # Linux/macOS quick launcher
+├── scripts/                     # Core setup scripts
+│   ├── neuro-spicy-init.ps1     # Windows interactive setup
+│   ├── neuro-spicy-init.sh     # Linux/macOS interactive setup
+│   ├── health-check-core.ps1   # Windows health check
+│   ├── health-check-core.sh    # Linux/macOS health check
+│   └── ...
+├── docs/                        # Documentation
+│   ├── CORE_FOCUS_PLAN.md      # Core philosophy
+│   ├── BASH_LINUX_DEFAULT.md   # Bash/Linux guide
+│   └── BEGINNER_JOURNEY.md      # Beginner's guide
+├── portable-dev-env/            # Portable development environment
+│   ├── cursor/                  # Cursor configuration
+│   ├── vscode/                  # VSCode configuration
+│   ├── profiles/                # Profile templates
+│   └── docs/                    # Usage documentation
+└── LICENSE                      # MIT License
+`
 
-# Check environment
-./scripts/health-check-core.sh
+## 🎯 Core Philosophy
 
-# Setup core essentials
-./scripts/neuro-spicy-setup-core.sh --components core
-```
+The Neuro-Spicy DevKit follows these principles:
 
-### **Core Commands (That's It!)**
-```bash
-./scripts/health-check-core.sh                    # Check environment
-./scripts/neuro-spicy-setup-core.sh --components core  # Setup environment
-./scripts/git-push-retry.sh --branch main         # Reliable git operations
-```
+1. **Simplicity First**: Minimal setup, maximum productivity
+2. **Portability**: Easy to share and customize
+3. **Accessibility**: ADHD/autism-friendly workflows
+4. **Cross-Platform**: Works everywhere
+5. **Open Source**: MIT licensed, community-driven
 
-### **Neuro-Spicy Core Features**
-- **Low Cognitive Load**: Simple, clear commands
-- **Fast Setup**: < 5 minutes to working environment
-- **Error Recovery**: Graceful handling of failures
-- **Progress Tracking**: Know where you are
-- **Success Confirmation**: Clear completion signals
-- **Portable**: Deploy anywhere, share via GitHub Gists
+## 📚 Documentation
 
-### **Get Started**
-```bash
-# Get commands for your environment
-python get_setup_commands.py
+- **[Core Focus Plan](docs/CORE_FOCUS_PLAN.md)** - Understanding the philosophy
+- **[Bash/Linux Default](docs/BASH_LINUX_DEFAULT.md)** - Linux/macOS setup guide
+- **[Beginner's Journey](docs/BEGINNER_JOURNEY.md)** - Step-by-step guide for new users
+- **[Usage Guide](portable-dev-env/docs/USAGE_GUIDE.md)** - Advanced usage patterns
 
-# Or just run the one-command setup
-git clone https://github.com/yourusername/zenOS.git && cd zenOS && python setup.py
+## 🔧 Customization
 
-# Or setup portable dev environment
-./portable-dev-env/scripts/setup.sh --platform linux --components all
-```
+The devkit uses a profile-based system for customization:
 
-*"Turning environment setup bugs into features, one setup at a time."*
+`json
+{
+  "name": "frontend-developer",
+  "description": "Frontend development profile",
+  "tools": ["node", "npm", "git"],
+  "mcp_servers": ["docker", "github"],
+  "shell_config": "bash"
+}
+`
+
+## 🤝 Contributing
+
+We welcome contributions! Please see our [Contributing Guide](CONTRIBUTING.md) for details.
+
+## 📄 License
+
+Neuro-Spicy DevKit is MIT licensed. See [LICENSE](LICENSE) for details.
+
+## 🙏 Acknowledgments
+
+Built with ❤️ for the neurodivergent developer community.
+
+---
+
+**"Code with confidence, develop with purpose"** 🧠✨
