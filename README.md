@@ -136,7 +136,6 @@ Help us build amazing things! Your support keeps this project alive and growing.
 bc1q3rfg8nxtqtmqvqk9yted68j3ny9v3xzlh2tqen
 ```
 
-![BTC QR Code](qr_btc.png)
 
 
 
@@ -146,8 +145,6 @@ bc1q3rfg8nxtqtmqvqk9yted68j3ny9v3xzlh2tqen
 281850633879433659883248666004562161466203055170
 ```
 
-![ETH QR Code](qr_eth.png)
-
 
 
 
@@ -156,18 +153,6 @@ bc1q3rfg8nxtqtmqvqk9yted68j3ny9v3xzlh2tqen
 Eh8yq5CWVVJu5dM73XxQzTnptaRwpKGeXMNqnTKPqqkw
 ```
 
-![SOL QR Code](qr_sol.png)
-
-
-
-
-#### NEAR (NEAR)
-```
-kaspars.near
-```
-
-![NEAR QR Code](qr_near.png)
-
 
 
 
@@ -175,8 +160,6 @@ kaspars.near
 ```
 69735005020116371176468892040143985368512315039320490669054034075822773641106
 ```
-
-![SUI QR Code](qr_sui.png)
 
 
 
