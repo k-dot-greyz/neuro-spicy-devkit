@@ -115,3 +115,89 @@ Built with ❤️ for the neurodivergent developer community.
 ---
 
 **"Code with confidence, develop with purpose"** 🧠✨
+
+# neuro-spicy-devkit
+
+🧘 A mindful AI-powered development environment
+
+## 💰 Support This Project
+
+Help us build amazing things! Your support keeps this project alive and growing.
+
+### 🚀 Quick Donate
+[![Donate Crypto](https://img.shields.io/badge/Donate-Crypto-brightgreen?style=for-the-badge&logo=bitcoin&logoColor=white)](https://github.com/neuro-spicy-devkit)
+
+### 💳 Supported Cryptocurrencies
+
+
+
+#### Bitcoin (BTC)
+```
+bc1q3rfg8nxtqtmqvqk9yted68j3ny9v3xzlh2tqen
+```
+
+![BTC QR Code](qr_btc.png)
+
+
+
+
+#### Ethereum (ETH)
+```
+281850633879433659883248666004562161466203055170
+```
+
+![ETH QR Code](qr_eth.png)
+
+
+
+
+#### Solana (SOL)
+```
+Eh8yq5CWVVJu5dM73XxQzTnptaRwpKGeXMNqnTKPqqkw
+```
+
+![SOL QR Code](qr_sol.png)
+
+
+
+
+#### NEAR (NEAR)
+```
+kaspars.near
+```
+
+![NEAR QR Code](qr_near.png)
+
+
+
+
+#### Sui (SUI)
+```
+69735005020116371176468892040143985368512315039320490669054034075822773641106
+```
+
+![SUI QR Code](qr_sui.png)
+
+
+
+
+### 🎯 Donation Tips
+- **Test First**: Send a small amount to verify the address
+- **Privacy**: Addresses rotate for privacy protection
+- **Support**: Your donations help maintain and improve this project
+- **Questions**: Open an issue for any donation-related questions
+
+### 📊 What Your Support Enables
+- 🐛 Bug fixes and improvements
+- 🚀 New features and enhancements
+- 📚 Documentation and tutorials
+- 🎨 UI/UX improvements
+- 🔧 Infrastructure and hosting
+
+---
+
+**Thank you for supporting neuro-spicy-devkit!** 🙏
+
+
+🔗 **Project**: [neuro-spicy-devkit](https://github.com/k-dot-greyz/neuro-spicy-devkit)
+
