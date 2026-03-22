@@ -156,10 +156,10 @@ install_dependencies() {
         if command_exists brew; then
             brew install node
         elif command_exists apt-get; then
-            curl -fsSL https://deb.nodesource.com/setup_18.x | sudo -E bash -
+            curl -fsSL https://deb.nodesource.com/setup_lts.x | sudo -E bash -
             sudo apt-get install -y nodejs
         elif command_exists yum; then
-            curl -fsSL https://rpm.nodesource.com/setup_18.x | sudo bash -
+            curl -fsSL https://rpm.nodesource.com/setup_lts.x | sudo bash -
             sudo yum install -y nodejs
         else
             print_color $RED "❌ Please install Node.js manually from https://nodejs.org/"
