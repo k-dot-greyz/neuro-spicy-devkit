@@ -1,0 +1,36 @@
+{
+  "editor.formatOnSave": true,
+  "editor.tabSize": 4,
+  "editor.insertSpaces": true,
+  "editor.trimAutoWhitespace": true,
+  "files.trimTrailingWhitespace": true,
+  "files.insertFinalNewline": true,
+  "files.eol": "\n",
+  "files.associations": {
+    "*.sh": "shellscript",
+    "*.ps1": "powershell"
+  },
+  "shellcheck.enable": true,
+  "shellcheck.run": "onSave",
+  "shellcheck.executablePath": "shellcheck",
+  "shellformat.path": "shfmt",
+  "shellformat.flag": "-i 4 -ci -bn",
+  "[shellscript]": {
+    "editor.defaultFormatter": "foxundermoon.shell-format",
+    "editor.tabSize": 4
+  },
+  "[json]": {
+    "editor.tabSize": 2,
+    "editor.defaultFormatter": "vscode.json-language-features"
+  },
+  "[markdown]": {
+    "editor.wordWrap": "on",
+    "files.trimTrailingWhitespace": false
+  },
+  "json.schemas": [],
+  "markdown.validate.enabled": true,
+  "search.exclude": {
+    "**/backup-*": true,
+    "**/node_modules": true
+  }
+}
