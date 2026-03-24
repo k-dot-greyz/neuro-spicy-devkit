@@ -17,6 +17,7 @@ shell_variant = bash
 [*.ps1]
 indent_style = space
 indent_size = 4
+end_of_line = crlf
 
 [*.md]
 trim_trailing_whitespace = false
