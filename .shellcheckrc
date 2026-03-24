@@ -5,7 +5,5 @@ shell=bash
 # Severity threshold: error, warning, info, style
 severity=warning
 
-# Disabled checks:
-# SC2034 — variable appears unused (common with sourced config vars)
-# SC1091 — can't follow sourced files (external/dynamic paths)
-disable=SC2034,SC1091
+# Use targeted inline disables (# shellcheck disable=SCXXXX) when needed
+# rather than global suppressions
