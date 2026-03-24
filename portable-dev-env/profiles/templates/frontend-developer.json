@@ -22,7 +22,7 @@
       {
         "name": "nodejs",
         "version": "lts",
-        "install": "nvm install --lts",
+        "install": "nvm install --lts || brew install node || echo 'Install Node.js LTS from https://nodejs.org'",
         "config": {
           "packageManager": "npm",
           "registry": "https://registry.npmjs.org/",
@@ -269,21 +269,21 @@
       "version": "0.1.0",
       "private": true,
       "dependencies": {
-        "react": "latest",
-        "react-dom": "latest",
-        "typescript": "latest"
+        "react": "^19.0.0",
+        "react-dom": "^19.0.0",
+        "typescript": "^5.0.0"
       },
       "devDependencies": {
-        "@types/react": "latest",
-        "@types/react-dom": "latest",
-        "@typescript-eslint/eslint-plugin": "latest",
-        "@typescript-eslint/parser": "latest",
-        "eslint": "latest",
-        "eslint-plugin-react": "latest",
-        "eslint-plugin-react-hooks": "latest",
-        "tailwindcss": "latest",
-        "postcss": "latest",
-        "autoprefixer": "latest"
+        "@types/react": "^19.0.0",
+        "@types/react-dom": "^19.0.0",
+        "@typescript-eslint/eslint-plugin": "^8.0.0",
+        "@typescript-eslint/parser": "^8.0.0",
+        "eslint": "^9.0.0",
+        "eslint-plugin-react": "^7.0.0",
+        "eslint-plugin-react-hooks": "^5.0.0",
+        "tailwindcss": "^4.0.0",
+        "postcss": "^8.0.0",
+        "autoprefixer": "^10.0.0"
       },
       "scripts": {
         "dev": "react-scripts start",
