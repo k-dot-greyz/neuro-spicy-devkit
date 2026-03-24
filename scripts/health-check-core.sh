@@ -9,6 +9,7 @@ set -euo pipefail
 RED='\033[0;31m'
 GREEN='\033[0;32m'
 YELLOW='\033[1;33m'
+BLUE='\033[0;34m' # shellcheck disable=SC2034 — used in echo -e strings
 CYAN='\033[0;36m'
 MAGENTA='\033[0;35m'
 NC='\033[0m' # No Color
@@ -20,8 +21,8 @@ log_info() {
 log_success() {
     echo -e "${GREEN}SUCCESS: $1${NC}"
 }
-log_warning() {
-    echo -e "${YELLOW}WARNING: $1${NC}"
+log_warn() {
+    echo -e "${YELLOW}WARN: $1${NC}"
 }
 log_error() {
     echo -e "${RED}ERROR: $1${NC}"
@@ -63,22 +64,6 @@ while [[ $# -gt 0 ]]; do
             ;;
     esac
 done
-
-log_info() {
-    echo -e "${CYAN}INFO: $1${NC}"
-}
-
-log_success() {
-    echo -e "${GREEN}SUCCESS: $1${NC}"
-}
-
-log_warn() {
-    echo -e "${YELLOW}WARN: $1${NC}"
-}
-
-log_error() {
-    echo -e "${RED}ERROR: $1${NC}"
-}
 
 test_git() {
     log_info "Checking Git..."
@@ -129,16 +114,18 @@ test_nodejs() {
         else
             log_error "Node.js: Version 18+ required (found: $node_version)"
             if [[ "$FIX" == "true" ]]; then
-                echo -e "${BLUE}💡 Install: nvm install --lts${NC}"
-                echo -e "${BLUE}💡 Or: brew install node${NC}"
+                echo -e "${BLUE}💡 Install (nvm): nvm install --lts${NC}"
+                echo -e "${BLUE}💡 Install (apt): curl -fsSL https://deb.nodesource.com/setup_lts.x | sudo -E bash - && sudo apt-get install -y nodejs${NC}"
+                echo -e "${BLUE}💡 Install (brew): brew install node${NC}"
             fi
             return 1
         fi
     else
         log_error "Node.js: Not installed"
         if [[ "$FIX" == "true" ]]; then
-            echo -e "${BLUE}💡 Install: nvm install --lts${NC}"
-            echo -e "${BLUE}💡 Or: brew install node${NC}"
+            echo -e "${BLUE}💡 Install (nvm): nvm install --lts${NC}"
+            echo -e "${BLUE}💡 Install (apt): curl -fsSL https://deb.nodesource.com/setup_lts.x | sudo -E bash - && sudo apt-get install -y nodejs${NC}"
+            echo -e "${BLUE}💡 Install (brew): brew install node${NC}"
         fi
         return 1
     fi
