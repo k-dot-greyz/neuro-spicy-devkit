@@ -46,6 +46,8 @@ The scripts are the product. Key entry points:
 - `./init.sh` — interactive launcher (**requires TTY** — skip in headless agents)
 - `./scripts/health-check-core.sh [--verbose] [--fix]` — environment validation
 - `./scripts/neuro-spicy-setup-core.sh [--components core|minimal|all] [--dry-run] [--skip-backup]` — setup runner
+- `./scripts/git-push-retry.sh [--branch <name>] [--dry-run]` — reliable git push with exponential backoff
+- `./scripts/setup-github-token.sh [--test] [--dry-run]` — GitHub token setup (secure creds storage)
 
 ### Gotchas
 
@@ -55,7 +57,7 @@ The scripts are the product. Key entry points:
 
 3. **Interactive scripts block.** `neuro-spicy-init.sh` uses `read` prompts throughout. Never run it non-interactively. Use `neuro-spicy-setup-core.sh --dry-run` or individual functions instead.
 
-4. **`git-push-retry.sh` doesn't exist.** Referenced in `test-bash-scripts.sh` but never created. The test script logs `ERROR: Script not found: git-push-retry.sh` and moves on.
+4. **`scripts/setup-github-token.sh` requires TTY.** It prompts for token input interactively. Use `--test` to validate an existing token non-interactively, or `--dry-run` to preview.
 
 ### File layout
 
