@@ -185,6 +185,23 @@ install_dependencies() {
     else
         print_color $GREEN "✅ Python already installed: $(python3 -V)"
     fi
+    
+    # Check for OpenClaw
+    if ! command_exists openclaw; then
+        print_color $YELLOW "📦 OpenClaw not found. Install? (y/N)"
+        read -r response
+        if [[ "$response" =~ ^[Yy]$ ]]; then
+            if command_exists npm; then
+                npm install -g openclaw@latest
+            else
+                curl -fsSL --proto '=https' --tlsv1.2 https://openclaw.ai/install.sh | bash
+            fi
+        else
+            print_color $CYAN "⏭️ Skipping OpenClaw (optional)"
+        fi
+    else
+        print_color $GREEN "✅ OpenClaw already installed: $(openclaw --version 2>/dev/null | head -1)"
+    fi
 }
 
 # Function to configure Git
