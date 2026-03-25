@@ -15,6 +15,11 @@ Desktop.ini
 *.swo
 *~
 
+# Docker runtime data
+portable-dev-env/openclaw/docker/.env
+portable-dev-env/openclaw/docker/.env.*
+!portable-dev-env/openclaw/docker/.env.example
+
 # Environment files
 .env
 .env.*
