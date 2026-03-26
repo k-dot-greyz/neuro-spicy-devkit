@@ -146,7 +146,7 @@ test_python() {
             log_error "Python: Version 3.8+ required (found: $python_version)"
             if [[ "$FIX" == "true" ]]; then
                 echo -e "${BLUE}💡 Install: sudo apt-get install python3${NC}"
-                echo -e "${BLUE}💡 Or: brew install python3${NC}"
+                echo -e "${BLUE}💡 Or: brew install python${NC}"
             fi
             return 1
         fi
@@ -161,7 +161,7 @@ test_python() {
             log_error "Python: Version 3.8+ required (found: $python_version)"
             if [[ "$FIX" == "true" ]]; then
                 echo -e "${BLUE}💡 Install: sudo apt-get install python3${NC}"
-                echo -e "${BLUE}💡 Or: brew install python3${NC}"
+                echo -e "${BLUE}💡 Or: brew install python${NC}"
             fi
             return 1
         fi
@@ -169,7 +169,7 @@ test_python() {
         log_error "Python: Not installed"
         if [[ "$FIX" == "true" ]]; then
             echo -e "${BLUE}💡 Install: sudo apt-get install python3${NC}"
-            echo -e "${BLUE}💡 Or: brew install python3${NC}"
+            echo -e "${BLUE}💡 Or: brew install python${NC}"
         fi
         return 1
     fi
@@ -290,9 +290,9 @@ show_summary() {
     
     for result in "${results[@]}"; do
         if [[ "$result" == "0" ]]; then
-            ((passed_checks++))
+            passed_checks=$((passed_checks + 1))
         else
-            ((failed_checks++))
+            failed_checks=$((failed_checks + 1))
         fi
     done
     
@@ -316,27 +316,14 @@ echo -e "${MAGENTA}🧠 Neuro-Spicy Health Check (Core Essentials)${NC}"
 echo -e "${MAGENTA}=============================================${NC}"
 echo ""
 
-# Run tests
-test_git
-git_result=$?
-
-test_nodejs
-nodejs_result=$?
-
-test_python
-python_result=$?
-
-test_github_token
-github_result=$?
-
-test_openclaw
-openclaw_result=$?
-
-test_cursor
-cursor_result=$?
-
-test_vscode
-vscode_result=$?
+# Run tests (wrapped in conditionals so set -e doesn't kill us on optional failures)
+if test_git; then git_result=0; else git_result=$?; fi
+if test_nodejs; then nodejs_result=0; else nodejs_result=$?; fi
+if test_python; then python_result=0; else python_result=$?; fi
+if test_github_token; then github_result=0; else github_result=$?; fi
+if test_openclaw; then openclaw_result=0; else openclaw_result=$?; fi
+if test_cursor; then cursor_result=0; else cursor_result=$?; fi
+if test_vscode; then vscode_result=0; else vscode_result=$?; fi
 
 # Show summary
 show_summary "$git_result" "$nodejs_result" "$python_result" "$github_result" "$openclaw_result" "$cursor_result" "$vscode_result"
