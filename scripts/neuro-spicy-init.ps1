@@ -208,7 +208,10 @@ function Install-Dependencies {
             if (Test-Command "npm") {
                 npm install -g openclaw@latest
             } else {
-                iwr -useb https://openclaw.ai/install.ps1 | iex
+                $tempInstaller = Join-Path $env:TEMP "openclaw-install.ps1"
+                Invoke-WebRequest -Uri "https://openclaw.ai/install.ps1" -OutFile $tempInstaller -UseBasicParsing
+                & $tempInstaller
+                Remove-Item $tempInstaller -Force -ErrorAction SilentlyContinue
             }
         } else {
             Write-ColorOutput "⏭️ Skipping OpenClaw (optional)" "Cyan"

@@ -162,11 +162,14 @@ if ! test_token "$token_input"; then
     exit 1
 fi
 
-# Store securely
+# Store securely (umask 077 prevents race condition where file is briefly world-readable)
 mkdir -p "$CREDS_DIR"
-echo "export GITHUB_TOKEN='${token_input}'" > "$CREDS_FILE"
-chmod 600 "$CREDS_FILE"
-echo -e "${GREEN}✅ Token saved to ${CREDS_FILE} (chmod 600)${NC}"
+chmod 700 "$CREDS_DIR"
+(
+    umask 077
+    printf 'export GITHUB_TOKEN=%q\n' "$token_input" > "$CREDS_FILE"
+)
+echo -e "${GREEN}✅ Token saved to ${CREDS_FILE} (mode 600)${NC}"
 
 # Wire into shell configs
 # shellcheck disable=SC2016
