@@ -5,6 +5,18 @@
 **Audit Date:** February 05, 2026  
 **Status:** 🟡 In Progress
 
+### Reconciliation (2026-04-19)
+
+Compared against this branch, `main`, and **open PRs** [#4](https://github.com/k-dot-greyz/neuro-spicy-devkit/pull/4) / [#5](https://github.com/k-dot-greyz/neuro-spicy-devkit/pull/5):
+
+| Area | On this branch | Still a gap vs audit / `main` | Tracked in |
+|------|----------------|------------------------------|------------|
+| Core shell scripts | `health-check-core.sh`, `neuro-spicy-setup-core.sh` present | `git-push-retry.sh` missing here; **PR #5 adds it** | [#15](https://github.com/k-dot-greyz/neuro-spicy-devkit/issues/15) |
+| Root `.gitignore` | Missing here | **PR #5 adds** user profiles + env ignores | [#16](https://github.com/k-dot-greyz/neuro-spicy-devkit/issues/16) |
+| SEC-001 token storage | Init still writes plaintext token to rc + profile JSON | Keychain/secret-service + **no token in profile JSON** | [#17](https://github.com/k-dot-greyz/neuro-spicy-devkit/issues/17) |
+| README / troubleshooting | N/A in this file | Broken fences, placeholders, no troubleshooting | [#14](https://github.com/k-dot-greyz/neuro-spicy-devkit/issues/14) |
+| `SECURITY.md` + this doc | `SECURITY.md` absent; sections below partly stale | Add policy doc + fix examples/fences in this file | [#18](https://github.com/k-dot-greyz/neuro-spicy-devkit/issues/18) |
+
 ---
 
 ## 🎯 Implementation Roadmap
@@ -76,14 +88,14 @@ store_github_token() {
 ### 🟠 Tier 2: High Priority (SHOULD FIX)
 
 #### FUNC-001: Missing Referenced Scripts
-**Status:** ❌ Not Started  
+**Status:** 🟡 Partially addressed on this branch (see reconciliation table)  
 **Priority:** P1 (High)  
 **Estimated Effort:** 1-2 hours
 
 **Missing Scripts:**
-1. `scripts/health-check-core.sh`
-2. `scripts/neuro-spicy-setup-core.sh`
-3. `scripts/git-push-retry.sh`
+1. `scripts/health-check-core.sh` — **present** on this branch
+2. `scripts/neuro-spicy-setup-core.sh` — **present** on this branch
+3. `scripts/git-push-retry.sh` — **still missing** here; added in **PR #5** ([#15](https://github.com/k-dot-greyz/neuro-spicy-devkit/issues/15))
 
 **Implementation Plan:**
 
@@ -145,9 +157,9 @@ print_color $GREEN "✅ Health check complete!"
 ```
 
 **Implementation Steps:**
-- [ ] Create `scripts/health-check-core.sh`
-- [ ] Create `scripts/neuro-spicy-setup-core.sh`
-- [ ] Create `scripts/git-push-retry.sh`
+- [x] Create `scripts/health-check-core.sh` (this branch)
+- [x] Create `scripts/neuro-spicy-setup-core.sh` (this branch)
+- [ ] Create `scripts/git-push-retry.sh` — open: [#15](https://github.com/k-dot-greyz/neuro-spicy-devkit/issues/15) / merge **PR #5**
 - [ ] Make scripts executable
 - [ ] Add error handling for missing scripts
 - [ ] Test script execution
@@ -168,11 +180,13 @@ run_script_safely() {
     if [ -f "$script_path" ]; then
         print_color $YELLOW "🚀 Running $script_name..."
         chmod +x "$script_path"
-        if "$script_path"; then
+        local exit_code=0
+        "$script_path" || exit_code=$?
+        if [ "$exit_code" -eq 0 ]; then
             print_color $GREEN "✅ $script_name completed successfully"
             return 0
         else
-            print_color $RED "❌ $script_name failed (exit code: $?)"
+            print_color $RED "❌ $script_name failed (exit code: $exit_code)"
             print_color $YELLOW "ℹ️  Check the script output above for details"
             return 1
         fi
@@ -225,7 +239,7 @@ run_script_safely() {
 
 **Sections to Add to README:**
 
-```markdown
+````markdown
 ## 🔧 Troubleshooting
 
 ### Common Issues
@@ -255,7 +269,7 @@ chmod +x scripts/health-check-core.sh
 # System Preferences > Security & Privacy > Privacy > Full Disk Access
 # Add Terminal.app or your terminal emulator
 ```
-```
+````
 
 **Implementation Steps:**
 - [ ] Add Troubleshooting section to README
@@ -267,15 +281,17 @@ chmod +x scripts/health-check-core.sh
 
 ## 📅 Timeline
 
+Original target (2026-02-12) slipped; work split across **PR #4** (audit branch) and **PR #5** (`cursor/development-environment-setup-7103`, 2026-03-22). Use GitHub issues **#14–#18** (2026-04-19) for current gap tracking.
+
 ### Week 1 (Current)
-- [ ] Day 1-2: Implement SEC-001 (secure token storage)
-- [ ] Day 3: Create missing scripts (FUNC-001)
+- [ ] Day 1-2: Implement SEC-001 (secure token storage) — [#17](https://github.com/k-dot-greyz/neuro-spicy-devkit/issues/17)
+- [ ] Day 3: Finish FUNC-001 (`git-push-retry.sh` on `main`) — [#15](https://github.com/k-dot-greyz/neuro-spicy-devkit/issues/15)
 - [ ] Day 4: Add error handling (FUNC-002)
 - [ ] Day 5: Testing on multiple platforms
 
 ### Week 2
-- [ ] Day 1: Create SECURITY.md (DOC-001)
-- [ ] Day 2: Add troubleshooting guide (DOC-002)
+- [ ] Day 1: Create SECURITY.md (DOC-001) — [#18](https://github.com/k-dot-greyz/neuro-spicy-devkit/issues/18)
+- [ ] Day 2: README + troubleshooting (DOC-002) — [#14](https://github.com/k-dot-greyz/neuro-spicy-devkit/issues/14)
 - [ ] Day 3-4: Final testing and bug fixes
 - [ ] Day 5: Mark PR as ready for review
 
@@ -318,19 +334,19 @@ chmod +x scripts/health-check-core.sh
 
 ## 📊 Progress Tracker
 
-**Overall:** 0% complete (0/11 tasks)
+**Overall:** partial — core shell scripts exist on this branch; SEC-001, `git-push-retry.sh`, root `.gitignore`, and docs remain (see issues **#14–#18**).
 
 **By Priority:**
-- 🔴 P0 (Critical): 0/1 (0%)
-- 🟠 P1 (High): 0/3 (0%)
-- 🟡 P2 (Medium): 0/4 (0%)
-- 🟢 P3 (Low): 0/3 (0%)
+- 🔴 P0 (Critical): 0/1 — SEC-001 ([#17](https://github.com/k-dot-greyz/neuro-spicy-devkit/issues/17))
+- 🟠 P1 (High): 2/3 — FUNC-001 two of three scripts; FUNC-003 / missing retry ([#15](https://github.com/k-dot-greyz/neuro-spicy-devkit/issues/15)); FUNC-002 open
+- 🟡 P2 (Medium): 0/2 — SECURITY + README/troubleshooting ([#14](https://github.com/k-dot-greyz/neuro-spicy-devkit/issues/14), [#18](https://github.com/k-dot-greyz/neuro-spicy-devkit/issues/18))
+- 🟢 P3 (Low): _not used_ — remove stray “0/3” counts from older drafts
 
 **By Category:**
-- Security: 0/1 (0%)
-- Functionality: 0/3 (0%)
-- Documentation: 0/4 (0%)
-- Features: 0/3 (0%)
+- Security: 0/1 (keychain + no secrets in profiles)
+- Functionality: 2/3 (missing `git-push-retry.sh` on `main` until **PR #5**)
+- Documentation: README + `SECURITY.md` + this tracker updates ([#14](https://github.com/k-dot-greyz/neuro-spicy-devkit/issues/14), [#18](https://github.com/k-dot-greyz/neuro-spicy-devkit/issues/18))
+- Repo hygiene: `.gitignore` ([#16](https://github.com/k-dot-greyz/neuro-spicy-devkit/issues/16))
 
 ---
 
@@ -346,6 +362,11 @@ chmod +x scripts/health-check-core.sh
 
 ## 📝 Changelog
 
+### 2026-04-19
+- ✅ Reconciled tracker with codebase + open PR **#5**
+- ✅ Opened gap issues **#14–#18** (README, `git-push-retry`, `.gitignore`, SEC-001, SECURITY + doc fixes)
+- ✅ Fixed FUNC-002 example (`exit_code` capture) and DOC-002 nested markdown fences in this file
+
 ### 2026-02-05
 - ✅ Created implementation tracking document
 - ✅ Created feature branch `audit/security-fixes-2026-02-05`
@@ -353,8 +374,8 @@ chmod +x scripts/health-check-core.sh
 
 ---
 
-**Next Action:** Begin implementation of SEC-001 (secure token storage)
+**Next Action:** Merge or cherry-pick **PR #5** for `git-push-retry.sh` + `.gitignore`, then drive **SEC-001** ([#17](https://github.com/k-dot-greyz/neuro-spicy-devkit/issues/17)).
 
 **Questions/Blockers:** None at this time
 
-**Estimated Completion:** 2026-02-12 (1 week for core fixes)
+**Estimated Completion:** TBD — follow issues **#14–#18**
