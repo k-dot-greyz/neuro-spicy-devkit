@@ -1,0 +1,38 @@
+{
+  // Neuro-Spicy DevKit — OpenClaw starter configuration
+  // Copy to ~/.openclaw/openclaw.json and customize
+  // Docs: https://docs.openclaw.ai/configuration
+
+  "identity": {
+    "name": "Clawd",
+    "theme": "neuro-spicy development assistant",
+    "emoji": "🧠"
+  },
+
+  "agent": {
+    "workspace": "~/.openclaw/workspace",
+    "model": {
+      // Set your preferred model — requires matching API key
+      // Options: anthropic/claude-sonnet-4-6, openai/gpt-4o, google/gemini-2.5-pro, ollama/llama3
+      "primary": "anthropic/claude-sonnet-4-6"
+    },
+    "memory": {
+      "enabled": true,
+      "vectorSearch": true
+    }
+  },
+
+  "security": {
+    "approvalPolicy": "prompt",
+    "allowedTools": ["shell", "browser", "filesystem"],
+    "sandbox": {
+      "enabled": true,
+      "network": true
+    }
+  },
+
+  "gateway": {
+    "port": 18789,
+    "ui": true
+  }
+}

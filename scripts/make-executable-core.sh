@@ -16,6 +16,10 @@ scripts=(
     "health-check-core.sh"
     "neuro-spicy-setup-core.sh"
     "git-push-retry.sh"
+    "setup-github-token.sh"
+    "neuro-spicy-init.sh"
+    "setup-bash-default.sh"
+    "test-bash-scripts.sh"
 )
 
 # Make scripts executable
