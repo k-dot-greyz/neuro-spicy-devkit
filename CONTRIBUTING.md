@@ -13,7 +13,7 @@ Since this repository provides a portable, multi-platform development environmen
 When writing or modifying scripts (PowerShell or Bash), always design with the following four pillars in mind:
 
 ### 1. Cross-Platform Portability
-We support **Windows (PowerShell 5.1+ and PowerShell Core)** and **Linux/macOS (POSIX-compliant Bash 4+)**.
+We support **Windows (PowerShell 5.1+ and PowerShell Core)** and **Linux/macOS (POSIX-compliant Bash 4+; on macOS, `/bin/bash` is often 3.2—use Homebrew Bash or run scripts with `#!/usr/bin/env bash` after installing Bash 4+)**.
 * **No Platform Assumptions**: Never assume a utility like `sed`, `awk`, or `grep` behaves the same way across GNU/Linux and macOS (BSD).
 * **Dual Implementations**: If a script performs a system-level action, ensure both a `.ps1` (PowerShell) and `.sh` (Bash) equivalent exist and behave identically.
 * **Line Endings**: Keep line endings consistent. Bash scripts (`.sh`) must use LF line endings, while PowerShell scripts (`.ps1`) can use LF or CRLF, but LF is preferred for repository consistency.
@@ -29,6 +29,24 @@ Scripts must respect the user's shell environment and avoid polluting it.
 * **Local Scopes**: In Bash, always use `local` for variables inside functions. In PowerShell, use local or script-scoped variables.
 * **No Global Pollution**: Do not permanently modify global environment variables unless explicitly requested by the user or required for core functionality (and clearly documented).
 * **Sandboxed Execution**: If a script depends on temporary environment variables, set them only for the duration of that script's execution.
+
+#### Environment hydration (CPU architecture)
+**Environment hydration** means applying this repository’s portable templates and setup steps into the user’s machine: copying or merging files from `portable-dev-env/` (Cursor/VSCode rules, settings, profiles), running idempotent Git/shell guidance, and surfacing optional variables such as `GITHUB_TOKEN` or `PATH` additions—without permanently polluting the global environment unless the user opts in.
+
+Hydration is **architecture-agnostic** when it only moves text/JSON/Markdown configs or runs shell logic that does not download CPU-specific binaries. Those paths must behave the same on every supported CPU.
+
+| Architecture | Typical identifiers | Hydration support | Notes for contributors |
+| :--- | :--- | :--- | :--- |
+| **ARM64** | `aarch64`, `arm64` | **Fully supported** | Linux ARM64 SBCs/servers, macOS Apple Silicon, Windows on ARM (use **PowerShell Core**). Prefer distro/package managers (`apt`, `brew`, `winget`) so the correct arch binaries are chosen automatically. |
+| **ARM32** | `armv7l`, `armhf`, `armv6l` | **Supported for config hydration**; **best-effort for optional tool installs** | File-based setup (rules, settings, profiles, Git config) is identical to other platforms. Do **not** hardcode `x86_64`/`amd64` download URLs or assume Node/Python/Cursor builds exist for every ARM32 board—detect arch, fail with a clear manual-install message, or delegate to the OS package manager. |
+| **x86_64 / amd64** | `x86_64`, `amd64` | **Fully supported** | Default CI and desktop target; same hydration rules as ARM64. |
+
+When a script needs the host CPU for installs or health output, detect it portably instead of guessing:
+
+* **Bash**: `uname -m` (see `scripts/health-check-core.sh` verbose output).
+* **PowerShell**: `$env:PROCESSOR_ARCHITECTURE` on Windows; on PowerShell Core across platforms, prefer `[System.Runtime.InteropServices.RuntimeInformation]::OSArchitecture`.
+
+**Quality expectation**: changes that touch hydration or installs must not regress ARM64; ARM32 must at minimum keep config hydration and dry-run paths working even when binary installers are unavailable.
 
 ### 4. Idempotent Script Execution
 Running a script multiple times must be completely safe and produce the same final state.
@@ -105,6 +123,7 @@ Before submitting a Pull Request, your changes must pass through our quality gat
 ### 4. Cross-Platform Validation
 * If you modify a Bash script, verify it on both Linux and macOS if possible.
 * If you modify a PowerShell script, verify it on both Windows PowerShell 5.1 and PowerShell Core (6+).
+* If you change environment hydration or architecture-sensitive installs, confirm behavior on **ARM64** when you can; for **ARM32**, at minimum run dry-run mode and config-only hydration paths (`./scripts/neuro-spicy-setup-core.sh --dry-run`, `./scripts/test-bash-scripts.sh`).
 
 ---
 
