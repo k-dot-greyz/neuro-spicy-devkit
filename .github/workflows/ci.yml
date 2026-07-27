@@ -1,0 +1,60 @@
+name: CI — Lint, Format, Test
+
+on:
+  pull_request:
+    branches: [main]
+  push:
+    branches: [main]
+
+permissions:
+  contents: read
+
+jobs:
+  lint-and-test:
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Install shellcheck
+        run: sudo apt-get update -qq && sudo apt-get install -y -qq shellcheck
+
+      - name: Install shfmt
+        run: |
+          go install mvdan.cc/sh/v3/cmd/shfmt@latest
+          sudo cp ~/go/bin/shfmt /usr/local/bin/shfmt
+
+      - name: Bash syntax check
+        run: bash -n scripts/*.sh init.sh
+
+      - name: ShellCheck
+        run: shellcheck scripts/*.sh init.sh
+
+      - name: shfmt format check
+        run: shfmt -d -i 4 -ci scripts/*.sh init.sh
+
+      - name: JSON validation
+        run: |
+          for f in portable-dev-env/profiles/templates/*.json .vscode/*.json; do
+            echo "  $f..."
+            jq empty "$f"
+          done
+
+      - name: Health check --help
+        run: bash scripts/health-check-core.sh --help
+
+      - name: Setup --dry-run
+        run: bash scripts/neuro-spicy-setup-core.sh --dry-run
+
+      - name: Git push retry --help
+        run: bash scripts/git-push-retry.sh --help
+
+      - name: Setup token --dry-run
+        run: bash scripts/setup-github-token.sh --dry-run
+
+      - name: Unit & integration tests (TDD)
+        run: bash tests/run.sh
+
+      - name: Integration smoke (network)
+        run: bash scripts/test-integration.sh

@@ -201,6 +201,26 @@ function Install-Dependencies {
         Write-ColorOutput "✅ Python already installed: $pythonVersion" "Green"
     }
     
+    # Check for OpenClaw
+    if (-not (Test-Command "openclaw")) {
+        $response = Read-Host "📦 OpenClaw not found. Install? (y/N)"
+        if ($response -match "^[Yy]$") {
+            if (Test-Command "npm") {
+                npm install -g openclaw@latest
+            } else {
+                $tempInstaller = Join-Path $env:TEMP "openclaw-install.ps1"
+                Invoke-WebRequest -Uri "https://openclaw.ai/install.ps1" -OutFile $tempInstaller -UseBasicParsing
+                & $tempInstaller
+                Remove-Item $tempInstaller -Force -ErrorAction SilentlyContinue
+            }
+        } else {
+            Write-ColorOutput "⏭️ Skipping OpenClaw (optional)" "Cyan"
+        }
+    } else {
+        $ocVersion = openclaw --version 2>&1 | Select-Object -First 1
+        Write-ColorOutput "✅ OpenClaw already installed: $ocVersion" "Green"
+    }
+    
     return $true
 }
 

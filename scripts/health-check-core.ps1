@@ -49,7 +49,7 @@ function Test-NodeJS {
     
     try {
         $nodeVersion = node --version 2>&1
-        if ($nodeVersion -match "v1[8-9]|v2[0-9]") {
+        if ($nodeVersion -match "v(1[8-9]|[2-9][0-9]|[1-9][0-9]{2,})") {
             Write-ColorOutput "✅ Node.js: $nodeVersion" "Green"
             
             # Check npm
@@ -78,20 +78,20 @@ function Test-Python {
     
     try {
         $pythonVersion = python --version 2>&1
-        if ($pythonVersion -match "Python 3\.[8-9]|Python 3\.1[0-9]") {
+        if ($pythonVersion -match "Python 3\.([8-9]|[1-9][0-9])") {
             Write-ColorOutput "✅ Python: $pythonVersion" "Green"
             return $true
         } else {
             Write-ColorOutput "❌ Python: Version 3.8+ required (found: $pythonVersion)" "Red"
             if ($Fix) {
-                Write-ColorOutput "💡 Install: winget install Python.Python.3.11" "Blue"
+                Write-ColorOutput "💡 Install: winget install Python.Python.3" "Blue"
             }
             return $false
         }
     } catch {
         Write-ColorOutput "❌ Python: Not installed" "Red"
         if ($Fix) {
-            Write-ColorOutput "💡 Install: winget install Python.Python.3.11" "Blue"
+            Write-ColorOutput "💡 Install: winget install Python.Python.3" "Blue"
         }
         return $false
     }
@@ -112,6 +112,35 @@ function Test-GitHubToken {
         }
         return $false
     }
+}
+
+function Test-OpenClaw {
+    Write-ColorOutput "🔍 Checking OpenClaw..." "Cyan"
+    
+    try {
+        $ocVersion = openclaw --version 2>&1
+        if ($ocVersion) {
+            Write-ColorOutput "✅ OpenClaw: $($ocVersion[0])" "Green"
+            
+            if (Test-Path "$env:USERPROFILE\.openclaw\openclaw.json") {
+                Write-ColorOutput "✅ OpenClaw config: Found" "Green"
+            } else {
+                Write-ColorOutput "⚠️ OpenClaw config: Not initialized" "Yellow"
+                if ($Fix) {
+                    Write-ColorOutput "💡 Run: openclaw onboard" "Blue"
+                }
+            }
+            return $true
+        }
+    } catch {
+        Write-ColorOutput "⚠️ OpenClaw: Not installed" "Yellow"
+        if ($Fix) {
+            Write-ColorOutput "💡 Install: npm install -g openclaw@latest" "Blue"
+            Write-ColorOutput "💡 Or: iwr -useb https://openclaw.ai/install.ps1 | iex" "Blue"
+        }
+        return $false
+    }
+    return $false
 }
 
 function Test-Cursor {
@@ -135,7 +164,7 @@ function Test-VSCode {
     
     try {
         $codeVersion = code --version 2>&1
-        if ($codeVersion -match "1\.[0-9]+\.[0-9]+") {
+        if ($codeVersion -match "[0-9]+\.[0-9]+\.[0-9]+") {
             Write-ColorOutput "✅ VSCode: $($codeVersion[0])" "Green"
             return $true
         }
@@ -191,6 +220,7 @@ $results = @{
     "Node.js" = Test-NodeJS
     "Python" = Test-Python
     "GitHub Token" = Test-GitHubToken
+    "OpenClaw" = Test-OpenClaw
     "Cursor" = Test-Cursor
     "VSCode" = Test-VSCode
 }

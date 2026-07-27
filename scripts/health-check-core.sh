@@ -5,10 +5,16 @@
 
 set -euo pipefail
 
+SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
+# shellcheck source=lib/ns-exit-codes.sh
+source "$SCRIPT_DIR/lib/ns-exit-codes.sh"
+
 # --- Color Definitions (Neuro-Spicy Standard) ---
 RED='\033[0;31m'
 GREEN='\033[0;32m'
 YELLOW='\033[1;33m'
+# shellcheck disable=SC2034
+BLUE='\033[0;34m'
 CYAN='\033[0;36m'
 MAGENTA='\033[0;35m'
 NC='\033[0m' # No Color
@@ -20,8 +26,8 @@ log_info() {
 log_success() {
     echo -e "${GREEN}SUCCESS: $1${NC}"
 }
-log_warning() {
-    echo -e "${YELLOW}WARNING: $1${NC}"
+log_warn() {
+    echo -e "${YELLOW}WARN: $1${NC}"
 }
 log_error() {
     echo -e "${RED}ERROR: $1${NC}"
@@ -59,26 +65,10 @@ while [[ $# -gt 0 ]]; do
             ;;
         *)
             echo "Unknown option: $1"
-            exit 1
+            exit "$NS_EXIT_ERROR"
             ;;
     esac
 done
-
-log_info() {
-    echo -e "${CYAN}INFO: $1${NC}"
-}
-
-log_success() {
-    echo -e "${GREEN}SUCCESS: $1${NC}"
-}
-
-log_warn() {
-    echo -e "${YELLOW}WARN: $1${NC}"
-}
-
-log_error() {
-    echo -e "${RED}ERROR: $1${NC}"
-}
 
 test_git() {
     log_info "Checking Git..."
@@ -122,23 +112,25 @@ test_nodejs() {
         node_version=$(node --version 2>&1)
         npm_version=$(npm --version 2>&1)
         
-        if [[ "$node_version" =~ v(1[8-9]|2[0-9]) ]]; then
+        if [[ "$node_version" =~ v(1[8-9]|[2-9][0-9]|[1-9][0-9]{2,}) ]]; then
             log_success "Node.js: $node_version"
             log_success "npm: $npm_version"
             return 0
         else
             log_error "Node.js: Version 18+ required (found: $node_version)"
             if [[ "$FIX" == "true" ]]; then
-                echo -e "${BLUE}💡 Install: curl -fsSL https://deb.nodesource.com/setup_18.x | sudo -E bash - && sudo apt-get install -y nodejs${NC}"
-                echo -e "${BLUE}💡 Or: brew install node@18${NC}"
+                echo -e "${BLUE}💡 Install (nvm): nvm install --lts${NC}"
+                echo -e "${BLUE}💡 Install (apt): curl -fsSL https://deb.nodesource.com/setup_lts.x | sudo -E bash - && sudo apt-get install -y nodejs${NC}"
+                echo -e "${BLUE}💡 Install (brew): brew install node${NC}"
             fi
             return 1
         fi
     else
         log_error "Node.js: Not installed"
         if [[ "$FIX" == "true" ]]; then
-            echo -e "${BLUE}💡 Install: curl -fsSL https://deb.nodesource.com/setup_18.x | sudo -E bash - && sudo apt-get install -y nodejs${NC}"
-            echo -e "${BLUE}💡 Or: brew install node@18${NC}"
+            echo -e "${BLUE}💡 Install (nvm): nvm install --lts${NC}"
+            echo -e "${BLUE}💡 Install (apt): curl -fsSL https://deb.nodesource.com/setup_lts.x | sudo -E bash - && sudo apt-get install -y nodejs${NC}"
+            echo -e "${BLUE}💡 Install (brew): brew install node${NC}"
         fi
         return 1
     fi
@@ -151,14 +143,14 @@ test_python() {
         local python_version
         python_version=$(python3 --version 2>&1)
         
-        if [[ "$python_version" =~ Python\ 3\.([8-9]|1[0-9]) ]]; then
+        if [[ "$python_version" =~ Python\ 3\.([8-9]|[1-9][0-9]) ]]; then
             log_success "Python: $python_version"
             return 0
         else
             log_error "Python: Version 3.8+ required (found: $python_version)"
             if [[ "$FIX" == "true" ]]; then
-                echo -e "${BLUE}💡 Install: sudo apt-get install python3.11${NC}"
-                echo -e "${BLUE}💡 Or: brew install python@3.11${NC}"
+                echo -e "${BLUE}💡 Install: sudo apt-get install python3${NC}"
+                echo -e "${BLUE}💡 Or: brew install python${NC}"
             fi
             return 1
         fi
@@ -166,41 +158,87 @@ test_python() {
         local python_version
         python_version=$(python --version 2>&1)
         
-        if [[ "$python_version" =~ Python\ 3\.([8-9]|1[0-9]) ]]; then
+        if [[ "$python_version" =~ Python\ 3\.([8-9]|[1-9][0-9]) ]]; then
             log_success "Python: $python_version"
             return 0
         else
             log_error "Python: Version 3.8+ required (found: $python_version)"
             if [[ "$FIX" == "true" ]]; then
-                echo -e "${BLUE}💡 Install: sudo apt-get install python3.11${NC}"
-                echo -e "${BLUE}💡 Or: brew install python@3.11${NC}"
+                echo -e "${BLUE}💡 Install: sudo apt-get install python3${NC}"
+                echo -e "${BLUE}💡 Or: brew install python${NC}"
             fi
             return 1
         fi
     else
         log_error "Python: Not installed"
         if [[ "$FIX" == "true" ]]; then
-            echo -e "${BLUE}💡 Install: sudo apt-get install python3.11${NC}"
-            echo -e "${BLUE}💡 Or: brew install python@3.11${NC}"
+            echo -e "${BLUE}💡 Install: sudo apt-get install python3${NC}"
+            echo -e "${BLUE}💡 Or: brew install python${NC}"
         fi
         return 1
     fi
 }
 
-test_github_token() {
-    log_info "Checking GitHub token..."
-    
+test_secrets() {
+    log_info "Checking secrets and API keys..."
+
+    local creds_file="$HOME/.config/neuro-spicy/credentials"
+    local missing=0
+    local total=0
+
+    # --- GitHub token ---
+    total=$((total + 1))
     if [[ -n "${GITHUB_TOKEN:-}" ]]; then
-        log_success "GitHub token: Set"
-        return 0
-    else
-        log_warn "GitHub token: Not set"
+        log_success "GITHUB_TOKEN: Set"
+    elif [[ -f "$creds_file" ]]; then
+        log_warn "GITHUB_TOKEN: Not in env (found creds file — source it)"
         if [[ "$FIX" == "true" ]]; then
-            echo -e "${BLUE}💡 Set: export GITHUB_TOKEN='your_token_here'${NC}"
-            echo -e "${BLUE}💡 Or: ./scripts/setup-github-token.sh${NC}"
+            echo -e "${BLUE}💡 Run: source ${creds_file}${NC}"
+            echo -e "${BLUE}💡 Or add to ~/.bashrc: [ -f ${creds_file} ] && source ${creds_file}${NC}"
         fi
-        return 1
+        missing=$((missing + 1))
+    else
+        log_warn "GITHUB_TOKEN: Not set"
+        if [[ "$FIX" == "true" ]]; then
+            echo -e "${BLUE}💡 Run: ./scripts/setup-github-token.sh${NC}"
+            echo -e "${BLUE}💡 Or: export GITHUB_TOKEN='ghp_...'${NC}"
+        fi
+        missing=$((missing + 1))
     fi
+
+    # --- AI provider keys (at least one needed for OpenClaw/AI CLI) ---
+    total=$((total + 1))
+    if [[ -n "${ANTHROPIC_API_KEY:-}" ]]; then
+        log_success "ANTHROPIC_API_KEY: Set (Claude)"
+    elif [[ -n "${OPENAI_API_KEY:-}" ]]; then
+        log_success "OPENAI_API_KEY: Set (GPT)"
+    elif [[ -n "${GOOGLE_API_KEY:-}" ]]; then
+        log_success "GOOGLE_API_KEY: Set (Gemini)"
+    elif [[ -n "${OPENROUTER_API_KEY:-}" ]]; then
+        log_success "OPENROUTER_API_KEY: Set (OpenRouter)"
+    else
+        log_warn "AI provider key: None set"
+        if [[ "$FIX" == "true" ]]; then
+            echo -e "${BLUE}💡 Set one of: ANTHROPIC_API_KEY, OPENAI_API_KEY, GOOGLE_API_KEY, OPENROUTER_API_KEY${NC}"
+            echo -e "${BLUE}💡 For OpenClaw Docker: cp portable-dev-env/openclaw/docker/.env.example .env${NC}"
+        fi
+        missing=$((missing + 1))
+    fi
+
+    # --- SSH key (for git operations) ---
+    total=$((total + 1))
+    if [[ -f "$HOME/.ssh/id_ed25519" ]] || [[ -f "$HOME/.ssh/id_rsa" ]]; then
+        log_success "SSH key: Found"
+    else
+        log_warn "SSH key: Not found"
+        if [[ "$FIX" == "true" ]]; then
+            echo -e "${BLUE}💡 Generate: ssh-keygen -t ed25519 -C 'your@email.com'${NC}"
+            echo -e "${BLUE}💡 Then add to GitHub: https://github.com/settings/keys${NC}"
+        fi
+        missing=$((missing + 1))
+    fi
+
+    if [[ $missing -eq 0 ]]; then return 0; else return 1; fi
 }
 
 test_cursor() {
@@ -226,6 +264,250 @@ test_cursor() {
         echo -e "${BLUE}💡 Download: https://cursor.sh/${NC}"
     fi
     return 1
+}
+
+test_rust() {
+    log_info "Checking Rust..."
+
+    if command -v rustc >/dev/null 2>&1; then
+        local rust_version
+        rust_version=$(rustc --version 2>&1)
+        log_success "Rust: $rust_version"
+
+        if command -v cargo >/dev/null 2>&1; then
+            log_success "Cargo: $(cargo --version 2>&1)"
+        else
+            log_warn "Cargo: Not found (should come with rustup)"
+        fi
+
+        if command -v clippy-driver >/dev/null 2>&1 || rustup component list 2>/dev/null | grep -q "clippy.*installed"; then
+            log_success "Clippy: Installed"
+        else
+            log_warn "Clippy: Not installed"
+            if [[ "$FIX" == "true" ]]; then
+                echo -e "${BLUE}💡 Install: rustup component add clippy${NC}"
+            fi
+        fi
+
+        if command -v rustfmt >/dev/null 2>&1; then
+            log_success "Rustfmt: Installed"
+        else
+            log_warn "Rustfmt: Not installed"
+            if [[ "$FIX" == "true" ]]; then
+                echo -e "${BLUE}💡 Install: rustup component add rustfmt${NC}"
+            fi
+        fi
+
+        return 0
+    else
+        log_warn "Rust: Not installed"
+        if [[ "$FIX" == "true" ]]; then
+            echo -e "${BLUE}💡 Install: curl --proto '=https' --tlsv1.2 -sSf https://sh.rustup.rs | sh${NC}"
+        fi
+        return 1
+    fi
+}
+
+test_typescript() {
+    log_info "Checking TypeScript toolchain..."
+
+    local ts_found=false
+
+    if command -v tsc >/dev/null 2>&1; then
+        log_success "TypeScript: $(tsc --version 2>&1)"
+        ts_found=true
+    else
+        log_warn "TypeScript (tsc): Not found"
+        if [[ "$FIX" == "true" ]]; then
+            echo -e "${BLUE}💡 Install: npm install -g typescript${NC}"
+        fi
+    fi
+
+    if command -v pnpm >/dev/null 2>&1; then
+        log_success "pnpm: $(pnpm --version 2>&1)"
+    else
+        log_warn "pnpm: Not found"
+        if [[ "$FIX" == "true" ]]; then
+            echo -e "${BLUE}💡 Install: npm install -g pnpm${NC}"
+        fi
+    fi
+
+    if command -v npx >/dev/null 2>&1; then
+        log_success "npx: Available"
+    fi
+
+    if [[ "$ts_found" == "true" ]]; then return 0; else return 1; fi
+}
+
+test_astro_vite() {
+    log_info "Checking Astro / Vite..."
+
+    local found=false
+
+    if command -v astro >/dev/null 2>&1; then
+        log_success "Astro CLI: $(astro --version 2>&1 | head -1)"
+        found=true
+    else
+        log_warn "Astro CLI: Not found (project-local is fine)"
+        if [[ "$FIX" == "true" ]]; then
+            echo -e "${BLUE}💡 Scaffold: npm create astro@latest${NC}"
+        fi
+    fi
+
+    if command -v vite >/dev/null 2>&1; then
+        log_success "Vite: $(vite --version 2>&1 | head -1)"
+        found=true
+    elif [[ -f "node_modules/.bin/vite" ]]; then
+        log_success "Vite: Found (project-local)"
+        found=true
+    else
+        log_warn "Vite: Not found (project-local is fine)"
+        if [[ "$FIX" == "true" ]]; then
+            echo -e "${BLUE}💡 Install: npm install -D vite${NC}"
+        fi
+    fi
+
+    if [[ "$found" == "true" ]]; then return 0; else return 1; fi
+}
+
+test_playwright() {
+    log_info "Checking Playwright..."
+
+    if command -v playwright >/dev/null 2>&1 || npx playwright --version >/dev/null 2>&1; then
+        local pw_version
+        pw_version=$(npx playwright --version 2>&1 | head -1) || pw_version="installed"
+        log_success "Playwright: $pw_version"
+        return 0
+    else
+        log_warn "Playwright: Not found"
+        if [[ "$FIX" == "true" ]]; then
+            echo -e "${BLUE}💡 Install: npm install -D @playwright/test${NC}"
+            echo -e "${BLUE}💡 Then: npx playwright install${NC}"
+        fi
+        return 1
+    fi
+}
+
+test_ai_cli() {
+    log_info "Checking AI CLI tools..."
+
+    local found=0
+
+    if command -v claude >/dev/null 2>&1; then
+        log_success "Claude CLI: Installed"
+        found=$((found + 1))
+    else
+        log_warn "Claude CLI: Not found"
+        if [[ "$FIX" == "true" ]]; then
+            echo -e "${BLUE}💡 Install: npm install -g @anthropic-ai/claude-cli${NC}"
+        fi
+    fi
+
+    if command -v gemini >/dev/null 2>&1; then
+        log_success "Gemini CLI: Installed"
+        found=$((found + 1))
+    else
+        log_warn "Gemini CLI: Not found"
+        if [[ "$FIX" == "true" ]]; then
+            echo -e "${BLUE}💡 Install: npm install -g @anthropic-ai/gemini-cli${NC}"
+        fi
+    fi
+
+    if command -v docker >/dev/null 2>&1; then
+        log_success "Docker: $(docker --version 2>&1 | head -1)"
+        found=$((found + 1))
+        if command -v docker-compose >/dev/null 2>&1 || docker compose version >/dev/null 2>&1; then
+            log_success "Docker Compose: Available"
+        fi
+    else
+        log_warn "Docker: Not found"
+        if [[ "$FIX" == "true" ]]; then
+            echo -e "${BLUE}💡 Install: https://docs.docker.com/get-docker/${NC}"
+        fi
+    fi
+
+    if command -v gh >/dev/null 2>&1; then
+        log_success "GitHub CLI: $(gh --version 2>&1 | head -1)"
+        found=$((found + 1))
+    else
+        log_warn "GitHub CLI (gh): Not found"
+        if [[ "$FIX" == "true" ]]; then
+            echo -e "${BLUE}💡 Install: https://cli.github.com/${NC}"
+        fi
+    fi
+
+    if [[ $found -gt 0 ]]; then return 0; else return 1; fi
+}
+
+test_dev_tools() {
+    log_info "Checking dev tools..."
+
+    local found=0
+
+    if command -v shellcheck >/dev/null 2>&1; then
+        log_success "ShellCheck: $(shellcheck --version 2>&1 | grep version: | head -1)"
+        found=$((found + 1))
+    else
+        log_warn "ShellCheck: Not found"
+        if [[ "$FIX" == "true" ]]; then
+            echo -e "${BLUE}💡 Install: sudo apt-get install shellcheck${NC}"
+        fi
+    fi
+
+    if command -v shfmt >/dev/null 2>&1; then
+        log_success "shfmt: $(shfmt --version 2>&1)"
+        found=$((found + 1))
+    else
+        log_warn "shfmt: Not found"
+        if [[ "$FIX" == "true" ]]; then
+            echo -e "${BLUE}💡 Install: go install mvdan.cc/sh/v3/cmd/shfmt@latest${NC}"
+        fi
+    fi
+
+    if command -v jq >/dev/null 2>&1; then
+        log_success "jq: $(jq --version 2>&1)"
+        found=$((found + 1))
+    fi
+
+    if command -v rg >/dev/null 2>&1; then
+        log_success "ripgrep: $(rg --version 2>&1 | head -1)"
+        found=$((found + 1))
+    fi
+
+    if command -v tree >/dev/null 2>&1; then
+        log_success "tree: Available"
+        found=$((found + 1))
+    fi
+
+    if [[ $found -gt 0 ]]; then return 0; else return 1; fi
+}
+
+test_openclaw() {
+    log_info "Checking OpenClaw..."
+    
+    if command -v openclaw >/dev/null 2>&1; then
+        local oc_version
+        oc_version=$(openclaw --version 2>&1 | head -n1)
+        log_success "OpenClaw: $oc_version"
+        
+        # Check if config exists
+        if [[ -f "$HOME/.openclaw/openclaw.json" ]]; then
+            log_success "OpenClaw config: Found"
+        else
+            log_warn "OpenClaw config: Not initialized"
+            if [[ "$FIX" == "true" ]]; then
+                echo -e "${BLUE}💡 Run: openclaw onboard${NC}"
+            fi
+        fi
+        return 0
+    else
+        log_warn "OpenClaw: Not installed"
+        if [[ "$FIX" == "true" ]]; then
+            echo -e "${BLUE}💡 Install: npm install -g openclaw@latest${NC}"
+            echo -e "${BLUE}💡 Or: curl -fsSL https://openclaw.ai/install.sh | bash${NC}"
+        fi
+        return 1
+    fi
 }
 
 test_vscode() {
@@ -274,9 +556,9 @@ show_summary() {
     
     for result in "${results[@]}"; do
         if [[ "$result" == "0" ]]; then
-            ((passed_checks++))
+            passed_checks=$((passed_checks + 1))
         else
-            ((failed_checks++))
+            failed_checks=$((failed_checks + 1))
         fi
     done
     
@@ -296,31 +578,37 @@ show_summary() {
 }
 
 # Main execution
-echo -e "${MAGENTA}🧠 Neuro-Spicy Health Check (Core Essentials)${NC}"
-echo -e "${MAGENTA}=============================================${NC}"
+echo -e "${MAGENTA}🧠 Neuro-Spicy Health Check (Full Stack)${NC}"
+echo -e "${MAGENTA}========================================${NC}"
 echo ""
 
-# Run tests
-test_git
-git_result=$?
+# Run tests (wrapped in conditionals so set -e doesn't kill us on optional failures)
+# --- Core (required) ---
+if test_git; then git_result=0; else git_result=$?; fi
+if test_nodejs; then nodejs_result=0; else nodejs_result=$?; fi
+if test_python; then python_result=0; else python_result=$?; fi
+if test_secrets; then secrets_result=0; else secrets_result=$?; fi
 
-test_nodejs
-nodejs_result=$?
+# --- Languages & frameworks ---
+if test_rust; then rust_result=0; else rust_result=$?; fi
+if test_typescript; then ts_result=0; else ts_result=$?; fi
+if test_astro_vite; then av_result=0; else av_result=$?; fi
+if test_playwright; then pw_result=0; else pw_result=$?; fi
 
-test_python
-python_result=$?
+# --- Dev tools & AI ---
+if test_dev_tools; then devtools_result=0; else devtools_result=$?; fi
+if test_ai_cli; then ai_result=0; else ai_result=$?; fi
 
-test_github_token
-github_result=$?
-
-test_cursor
-cursor_result=$?
-
-test_vscode
-vscode_result=$?
+# --- Editors ---
+if test_openclaw; then openclaw_result=0; else openclaw_result=$?; fi
+if test_cursor; then cursor_result=0; else cursor_result=$?; fi
+if test_vscode; then vscode_result=0; else vscode_result=$?; fi
 
 # Show summary
-show_summary "$git_result" "$nodejs_result" "$python_result" "$github_result" "$cursor_result" "$vscode_result"
+show_summary "$git_result" "$nodejs_result" "$python_result" "$secrets_result" \
+    "$rust_result" "$ts_result" "$av_result" "$pw_result" \
+    "$devtools_result" "$ai_result" \
+    "$openclaw_result" "$cursor_result" "$vscode_result"
 
 if [[ "$VERBOSE" == "true" ]]; then
     echo ""
@@ -330,3 +618,21 @@ if [[ "$VERBOSE" == "true" ]]; then
     echo "Shell: $SHELL"
     echo "Working Directory: $(pwd)"
 fi
+
+core_failed=0
+for core_result in "$git_result" "$nodejs_result" "$python_result"; do
+    if [[ "$core_result" != "0" ]]; then
+        core_failed=1
+        break
+    fi
+done
+
+if [[ $core_failed -eq 1 ]]; then
+    exit "$NS_EXIT_MISSING_DEP"
+fi
+
+if [[ "$secrets_result" != "0" ]]; then
+    exit "$NS_EXIT_CONFIG"
+fi
+
+exit "$NS_EXIT_SUCCESS"

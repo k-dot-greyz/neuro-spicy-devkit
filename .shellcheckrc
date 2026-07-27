@@ -1,0 +1,9 @@
+# ShellCheck configuration — https://www.shellcheck.net/wiki/
+# Default shell dialect
+shell=bash
+
+# Severity threshold: error, warning, info, style
+severity=warning
+
+# Use targeted inline disables (# shellcheck disable=SCXXXX) when needed
+# rather than global suppressions

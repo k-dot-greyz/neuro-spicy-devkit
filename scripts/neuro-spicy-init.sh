@@ -62,13 +62,13 @@ prompt_input() {
         
         if [ -n "$validation_func" ]; then
             if $validation_func "$input"; then
-                eval "$variable_name='$input'"
+                printf -v "$variable_name" '%s' "$input"
                 break
             else
-                print_color $RED "❌ Invalid input. Please try again."
+                print_color "$RED" "❌ Invalid input. Please try again."
             fi
         else
-            eval "$variable_name='$input'"
+            printf -v "$variable_name" '%s' "$input"
             break
         fi
     done
@@ -156,10 +156,10 @@ install_dependencies() {
         if command_exists brew; then
             brew install node
         elif command_exists apt-get; then
-            curl -fsSL https://deb.nodesource.com/setup_18.x | sudo -E bash -
+            curl -fsSL https://deb.nodesource.com/setup_lts.x | sudo -E bash -
             sudo apt-get install -y nodejs
         elif command_exists yum; then
-            curl -fsSL https://rpm.nodesource.com/setup_18.x | sudo bash -
+            curl -fsSL https://rpm.nodesource.com/setup_lts.x | sudo bash -
             sudo yum install -y nodejs
         else
             print_color $RED "❌ Please install Node.js manually from https://nodejs.org/"
@@ -184,6 +184,23 @@ install_dependencies() {
         fi
     else
         print_color $GREEN "✅ Python already installed: $(python3 -V)"
+    fi
+    
+    # Check for OpenClaw
+    if ! command_exists openclaw; then
+        print_color $YELLOW "📦 OpenClaw not found. Install? (y/N)"
+        read -r response
+        if [[ "$response" =~ ^[Yy]$ ]]; then
+            if command_exists npm; then
+                npm install -g openclaw@latest
+            else
+                curl -fsSL --proto '=https' --tlsv1.2 https://openclaw.ai/install.sh | bash
+            fi
+        else
+            print_color $CYAN "⏭️ Skipping OpenClaw (optional)"
+        fi
+    else
+        print_color $GREEN "✅ OpenClaw already installed: $(openclaw --version 2>/dev/null | head -1)"
     fi
 }
 
@@ -231,14 +248,26 @@ configure_github() {
     
     # Test the token
     if test_github_token "$GITHUB_TOKEN"; then
-        # Set environment variable
-        echo "export GITHUB_TOKEN='$GITHUB_TOKEN'" >> ~/.bashrc
-        echo "export GITHUB_TOKEN='$GITHUB_TOKEN'" >> ~/.zshrc
+        # Store in a dedicated file with restricted permissions
+        local creds_dir="$HOME/.config/neuro-spicy"
+        local creds_file="$creds_dir/credentials"
+        mkdir -p "$creds_dir"
+        chmod 700 "$creds_dir"
+        (
+            umask 077
+            printf 'export GITHUB_TOKEN=%q\n' "$GITHUB_TOKEN" > "$creds_file"
+        )
+        # Source from shell configs if not already wired up
+        # shellcheck disable=SC2016
+        grep -q "neuro-spicy/credentials" ~/.bashrc 2>/dev/null || echo '[ -f ~/.config/neuro-spicy/credentials ] && source ~/.config/neuro-spicy/credentials' >> ~/.bashrc
+        # shellcheck disable=SC2016
+        grep -q "neuro-spicy/credentials" ~/.zshrc 2>/dev/null || echo '[ -f ~/.config/neuro-spicy/credentials ] && source ~/.config/neuro-spicy/credentials' >> ~/.zshrc
         export GITHUB_TOKEN="$GITHUB_TOKEN"
         
-        print_color $GREEN "✅ GitHub token configured and tested"
+        print_color "$GREEN" "✅ GitHub token configured and tested"
+        print_color "$CYAN" "💡 Token stored in $creds_file (chmod 600)"
     else
-        print_color $RED "❌ Failed to configure GitHub token"
+        print_color "$RED" "❌ Failed to configure GitHub token"
         return 1
     fi
 }
@@ -334,7 +363,7 @@ create_user_profile() {
     "name": "$GIT_USER_NAME",
     "email": "$GIT_USER_EMAIL",
     "github_username": "$GITHUB_USERNAME",
-    "github_token": "$GITHUB_TOKEN"
+    "githubToken": "$GITHUB_TOKEN"
   },
   "tools": {
     "nodejs": {

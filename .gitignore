@@ -1,0 +1,27 @@
+# Backups created by neuro-spicy-setup-core.sh
+backup-*/
+
+# User profiles (may contain tokens/personal data)
+portable-dev-env/profiles/user/
+
+# OS junk
+.DS_Store
+Thumbs.db
+Desktop.ini
+
+# Editor state
+.vscode/.history/
+*.swp
+*.swo
+*~
+
+# Docker runtime data
+portable-dev-env/openclaw/docker/.env
+portable-dev-env/openclaw/docker/.env.*
+!portable-dev-env/openclaw/docker/.env.example
+
+# Environment files
+.env
+.env.*
+!.env.example
+!.env.sample
