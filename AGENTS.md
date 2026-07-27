@@ -31,13 +31,14 @@ Config: `.shellcheckrc` (severity=warning, targeted inline disables only).
 ### Test
 
 ```sh
-bash scripts/test-integration.sh                      # full integration suite (18 tests)
-bash -n scripts/*.sh init.sh                          # syntax validation
-bash scripts/health-check-core.sh --help              # verify help flag
-bash scripts/neuro-spicy-setup-core.sh --dry-run      # verify dry-run
+./tests/run.sh                                      # unit + offline integration (TDD gate)
+bash scripts/test-integration.sh                    # full integration suite (network smoke)
+bash -n scripts/*.sh init.sh                        # syntax validation
 ```
 
-The built-in `scripts/test-bash-scripts.sh` has a known bug (`set -euo pipefail` + `((total_tests++))` from 0). Use `test-integration.sh` instead.
+See `docs/TDD_ORCHESTRATION.md` and `tasks.md` for the epic TDD backlog.
+
+Prefer `./tests/run.sh` over `scripts/test-bash-scripts.sh` (legacy smoke; increment bug fixed).
 
 ### Run / demo
 

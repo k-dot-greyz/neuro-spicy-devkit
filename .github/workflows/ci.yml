@@ -26,17 +26,17 @@ jobs:
           sudo cp ~/go/bin/shfmt /usr/local/bin/shfmt
 
       - name: Bash syntax check
-        run: bash -n scripts/*.sh init.sh
+        run: bash -n scripts/*.sh scripts/lib/*.sh init.sh tests/run.sh tests/lib/*.sh tests/unit/*.sh tests/integration/*.sh
 
       - name: ShellCheck (errors only — warnings tracked in issues)
-        run: shellcheck --severity=error scripts/*.sh init.sh
+        run: shellcheck --severity=error scripts/*.sh scripts/lib/*.sh init.sh tests/run.sh tests/lib/*.sh tests/unit/*.sh tests/integration/*.sh
 
       - name: ShellCheck (warnings — non-blocking)
-        run: shellcheck scripts/*.sh init.sh || echo "::warning::ShellCheck found warnings (see above). Non-blocking."
+        run: shellcheck scripts/*.sh scripts/lib/*.sh init.sh tests/run.sh tests/lib/*.sh tests/unit/*.sh tests/integration/*.sh || echo "::warning::ShellCheck found warnings (see above). Non-blocking."
         continue-on-error: true
 
       - name: shfmt format check (non-blocking)
-        run: shfmt -d -i 4 -ci scripts/*.sh init.sh || echo "::warning::shfmt found formatting diffs. Non-blocking."
+        run: shfmt -d -i 4 -ci scripts/*.sh scripts/lib/*.sh init.sh tests/run.sh tests/lib/*.sh tests/unit/*.sh tests/integration/*.sh || echo "::warning::shfmt found formatting diffs. Non-blocking."
         continue-on-error: true
 
       - name: JSON validation
@@ -58,9 +58,12 @@ jobs:
       - name: Setup token --dry-run
         run: bash scripts/setup-github-token.sh --dry-run
 
-      - name: Docker entrypoint syntax
-        run: bash -n portable-dev-env/openclaw/docker/docker-entrypoint.sh
+      - name: Unit & integration tests (TDD)
+        run: bash tests/run.sh
 
-      - name: Integration tests
+      - name: Integration smoke (network)
         run: bash scripts/test-integration.sh
         if: hashFiles('scripts/test-integration.sh') != ''
+
+      - name: Docker entrypoint syntax
+        run: bash -n portable-dev-env/openclaw/docker/docker-entrypoint.sh
