@@ -53,5 +53,8 @@ jobs:
       - name: Setup token --dry-run
         run: bash scripts/setup-github-token.sh --dry-run
 
-      - name: Docker entrypoint syntax
-        run: bash -n portable-dev-env/openclaw/docker/docker-entrypoint.sh
+      - name: Unit & integration tests (TDD)
+        run: bash tests/run.sh
+
+      - name: Integration smoke (network)
+        run: bash scripts/test-integration.sh

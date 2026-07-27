@@ -66,6 +66,9 @@ test_script_dry_run() {
 }
 
 # Main execution
+SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
+cd "$SCRIPT_DIR"
+
 echo -e "${MAGENTA}🧪 Testing Bash Scripts for Neuro-Spicy DevKit${NC}"
 echo -e "${MAGENTA}=============================================${NC}"
 echo ""
@@ -85,22 +88,22 @@ for script in "${scripts[@]}"; do
         echo -e "${BLUE}Testing $script...${NC}"
         
         # Test syntax
-        ((total_tests++))
+        total_tests=$((total_tests + 1))
         if test_script_syntax "$script"; then
-            ((passed_tests++))
+            passed_tests=$((passed_tests + 1))
         fi
         
         # Test help
-        ((total_tests++))
+        total_tests=$((total_tests + 1))
         if test_script_help "$script"; then
-            ((passed_tests++))
+            passed_tests=$((passed_tests + 1))
         fi
         
         # Test dry run (if supported)
         if [[ "$script" == "neuro-spicy-setup-core.sh" ]]; then
-            ((total_tests++))
+            total_tests=$((total_tests + 1))
             if test_script_dry_run "$script"; then
-                ((passed_tests++))
+                passed_tests=$((passed_tests + 1))
             fi
         fi
         
