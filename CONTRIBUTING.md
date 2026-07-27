@@ -28,6 +28,12 @@ Run these locally before opening a PR (CI runs the same checks on every PR):
 
 Optional helper: `bash scripts/test-bash-scripts.sh` runs syntax/help checks on a subset of scripts and dry-run only for `neuro-spicy-setup-core.sh`. Prefer `test-integration.sh` for pre-PR validation.
 
+Additional manual checks for script changes:
+
+* **Idempotency**: Run the script twice; the second run must succeed without duplicating config lines.
+* **Cross-platform**: Test Bash changes on Linux and macOS when possible; test PowerShell on Windows PowerShell 5.1 and PowerShell Core.
+* **Architecture-sensitive hydration/installs**: Confirm ARM64 when you can; on ARM32, at minimum run `bash scripts/neuro-spicy-setup-core.sh --dry-run` and `bash scripts/test-integration.sh`.
+
 ---
 
 ## GlitchWorks Agnostic Architecture Protocol
@@ -76,6 +82,24 @@ Hydration is **architecture-agnostic** when it only moves text/JSON/Markdown con
 When a script needs the host CPU for installs or health output, detect it portably:
 
 * **Bash**: `uname -m` (see `scripts/health-check-core.sh --verbose`).
+* **PowerShell**: `$env:PROCESSOR_ARCHITECTURE` on Windows; on PowerShell Core across platforms, prefer `[System.Runtime.InteropServices.RuntimeInformation]::OSArchitecture`.
+
+**Quality expectation**: changes that touch hydration or installs must not regress ARM64; ARM32 must at minimum keep config hydration and dry-run paths working even when binary installers are unavailable.
+
+#### Environment hydration (CPU architecture)
+**Environment hydration** means applying this repository’s portable templates and setup steps into the user’s machine: copying or merging files from `portable-dev-env/` (Cursor/VSCode rules, settings, profiles), running idempotent Git/shell guidance, and surfacing optional variables such as `GITHUB_TOKEN` or `PATH` additions—without permanently polluting the global environment unless the user opts in.
+
+Hydration is **architecture-agnostic** when it only moves text/JSON/Markdown configs or runs shell logic that does not download CPU-specific binaries. Those paths must behave the same on every supported CPU.
+
+| Architecture | Typical identifiers | Hydration support | Notes for contributors |
+| :--- | :--- | :--- | :--- |
+| **ARM64** | `aarch64`, `arm64` | **Fully supported** | Linux ARM64 SBCs/servers, macOS Apple Silicon, Windows on ARM (use **PowerShell Core**). Prefer distro/package managers (`apt`, `brew`, `winget`) so the correct arch binaries are chosen automatically. |
+| **ARM32** | `armv7l`, `armhf`, `armv6l` | **Supported for config hydration**; **best-effort for optional tool installs** | File-based setup (rules, settings, profiles, Git config) is identical to other platforms. Do **not** hardcode `x86_64`/`amd64` download URLs or assume Node/Python/Cursor builds exist for every ARM32 board—detect arch, fail with a clear manual-install message, or delegate to the OS package manager. |
+| **x86_64 / amd64** | `x86_64`, `amd64` | **Fully supported** | Default CI and desktop target; same hydration rules as ARM64. |
+
+When a script needs the host CPU for installs or health output, detect it portably instead of guessing:
+
+* **Bash**: `uname -m` (see `scripts/health-check-core.sh` verbose output).
 * **PowerShell**: `$env:PROCESSOR_ARCHITECTURE` on Windows; on PowerShell Core across platforms, prefer `[System.Runtime.InteropServices.RuntimeInformation]::OSArchitecture`.
 
 **Quality expectation**: changes that touch hydration or installs must not regress ARM64; ARM32 must at minimum keep config hydration and dry-run paths working even when binary installers are unavailable.
