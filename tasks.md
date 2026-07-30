@@ -55,7 +55,7 @@ Primary commands (aliases / thin wrappers → bash engine):
 | **5** | Sanitize unsafe IO | issue-linked tests (#8–#12) | bash init/install paths (no `curl\|bash`) |
 | **6** | PowerShell parity | Pester or matrix (deferred) | `*.ps1` twins — **not** blocking CLI MVP |
 
-Phases **0–2** are largely landed on the TDD branch. Next implementation slices: **3 → 3b → 4 → 4b → 5**, then epic installers.
+Phases **0–2** are largely landed on the TDD branch. **Scaffold for 3–4b** is in-repo (`scripts/ns`, resolver lib, shell adapters, tests). Next: harden slices per [docs/CLI_IMPLEMENTATION_SCAFFOLD.md](docs/CLI_IMPLEMENTATION_SCAFFOLD.md) and lane briefs under `docs/scaffold/lanes/`.
 
 ## Swarm mapping (see also `docs/SWARM_ORCHESTRATION.md`)
 

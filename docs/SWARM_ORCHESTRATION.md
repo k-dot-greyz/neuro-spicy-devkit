@@ -110,9 +110,10 @@ One language/profile column per agent (Rust / Python / Node / MCP **config gen o
 
 ```text
 Repo: k-dot-greyz/neuro-spicy-devkit
-Base: origin/greyzxcursor/tdd-orchestration-431f  (or main after Wave 0 merge)
+Base: origin/greyzxcursor/cli-shell-orchestration-b042 (or main after Wave 0 merge)
 Branch: greyzxcursor/<lane-short-name>-b042
-Read:     docs/CLI_IMPLEMENTATION_SCAFFOLD.md + docs/scaffold/lanes/<LANE>.md
+Read: docs/CLI_IMPLEMENTATION_SCAFFOLD.md + docs/scaffold/lanes/<LANE>.md
+Product: CLI-first — bash engine; bash/zsh/fish adapters; PS1 deferred unless security lane
 Iron law: failing test first (tests/unit or tests/integration)
 Accept:
   ./tests/run.sh
