@@ -8,6 +8,10 @@ source "$ROOT/tests/lib/assert.sh"
 source "$ROOT/scripts/lib/ns-cli.sh"
 
 ns_cli_reset
+ns_cli_parse --dry-run
+ns_assert_eq "true" "${NS_CLI_DRY_RUN:-false}" "dry-run"
+
+ns_cli_reset
 ns_cli_parse --verbose --quiet
 ns_assert_eq "true" "${NS_CLI_VERBOSE:-false}" "verbose"
 ns_assert_eq "true" "${NS_CLI_QUIET:-false}" "quiet"

@@ -36,7 +36,7 @@ bash scripts/test-integration.sh                    # smoke + network checks
 bash -n scripts/*.sh init.sh                        # syntax validation
 ```
 
-See `docs/TDD_ORCHESTRATION.md` and `tasks.md` for the epic TDD backlog.
+See `docs/TDD_ORCHESTRATION.md`, `tasks.md`, and **`docs/CLI_IMPLEMENTATION_SCAFFOLD.md`** for the epic TDD backlog and swarm execution map.
 
 Legacy note: `scripts/test-bash-scripts.sh` is fixed for `set -e` + increment; prefer `./tests/run.sh`.
 
@@ -44,6 +44,8 @@ Legacy note: `scripts/test-bash-scripts.sh` is fixed for `set -e` + increment; p
 
 The scripts are the product. Key entry points:
 
+- `bash scripts/ns help` — unified CLI (`check` | `setup` | `doctor`)
+- `source portable-dev-env/shell/aliases.sh` — bash/zsh shortcuts (see `portable-dev-env/shell/README.md`)
 - `./init.sh` — interactive launcher (**requires TTY** — skip in headless agents)
 - `./scripts/health-check-core.sh [--verbose] [--fix]` — environment validation
 - `./scripts/neuro-spicy-setup-core.sh [--components core|minimal|all] [--dry-run] [--skip-backup]` — setup runner

@@ -91,4 +91,4 @@ Fish adapter smoke (when Phase 4 lands):
 fish -n portable-dev-env/shell/aliases.fish
 ```
 
-See [docs/TDD_ORCHESTRATION.md](docs/TDD_ORCHESTRATION.md) and [docs/SWARM_ORCHESTRATION.md](docs/SWARM_ORCHESTRATION.md).
+See [docs/TDD_ORCHESTRATION.md](docs/TDD_ORCHESTRATION.md), [docs/SWARM_ORCHESTRATION.md](docs/SWARM_ORCHESTRATION.md), and **[docs/CLI_IMPLEMENTATION_SCAFFOLD.md](docs/CLI_IMPLEMENTATION_SCAFFOLD.md)** (rehydrated plan + execution + file map).

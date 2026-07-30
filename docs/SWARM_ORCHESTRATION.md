@@ -2,7 +2,7 @@
 
 How to run focused parallel agent sessions for Epic #20 **without** double-work or stacking installs on unsafe IO.
 
-Companion docs: [tasks.md](../tasks.md), [TDD_ORCHESTRATION.md](TDD_ORCHESTRATION.md).
+Companion docs: [tasks.md](../tasks.md), [TDD_ORCHESTRATION.md](TDD_ORCHESTRATION.md), **[CLI_IMPLEMENTATION_SCAFFOLD.md](CLI_IMPLEMENTATION_SCAFFOLD.md)**.
 
 ## North star
 
@@ -112,7 +112,7 @@ One language/profile column per agent (Rust / Python / Node / MCP **config gen o
 Repo: k-dot-greyz/neuro-spicy-devkit
 Base: origin/greyzxcursor/tdd-orchestration-431f  (or main after Wave 0 merge)
 Branch: greyzxcursor/<lane-short-name>-b042
-Product: CLI-first — bash engine; bash/zsh/fish adapters; PS1 deferred unless security lane
+Read:     docs/CLI_IMPLEMENTATION_SCAFFOLD.md + docs/scaffold/lanes/<LANE>.md
 Iron law: failing test first (tests/unit or tests/integration)
 Accept:
   ./tests/run.sh
