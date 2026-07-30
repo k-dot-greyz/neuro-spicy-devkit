@@ -3,6 +3,10 @@
 # Source this from ~/.bashrc or ~/.zshrc:
 #   [ -f /path/to/neuro-spicy-devkit/portable-dev-env/shell/aliases.sh ] && source /path/to/neuro-spicy-devkit/portable-dev-env/shell/aliases.sh
 
+_NS_ALIASES_DIR="$(cd "$(dirname "${BASH_SOURCE[0]:-$0}")" && pwd)"
+# shellcheck source=ns-env.sh
+source "$_NS_ALIASES_DIR/ns-env.sh"
+
 # === Dev lifecycle ===
 alias dev='npm run dev 2>/dev/null || cargo run 2>/dev/null || python3 -m flask run 2>/dev/null || echo "No dev command found"'
 alias build='npm run build 2>/dev/null || cargo build --release 2>/dev/null || echo "No build command found"'
@@ -24,13 +28,14 @@ alias gds='git diff --staged'
 alias gco='git checkout'
 alias gb='git branch -vv'
 alias gpull='git pull --rebase'
-alias push='./scripts/git-push-retry.sh'
+alias push='bash "$NS_SCRIPTS/git-push-retry.sh"'
 
-# === Neuro-Spicy DevKit ===
-alias check='bash scripts/health-check-core.sh --verbose'
-alias checkfix='bash scripts/health-check-core.sh --fix'
-alias setup='bash scripts/neuro-spicy-setup-core.sh'
-alias dryrun='bash scripts/neuro-spicy-setup-core.sh --dry-run'
+# === Neuro-Spicy DevKit (bash engine via functions for arg forwarding) ===
+check() { bash "$NS_SCRIPTS/health-check-core.sh" "$@"; }
+checkfix() { bash "$NS_SCRIPTS/health-check-core.sh" --fix "$@"; }
+setup() { bash "$NS_SCRIPTS/neuro-spicy-setup-core.sh" "$@"; }
+doctor() { bash "$NS_SCRIPTS/doctor-core.sh" "$@"; }
+dryrun() { bash "$NS_SCRIPTS/neuro-spicy-setup-core.sh" --dry-run "$@"; }
 
 # === Docker shortcuts ===
 alias dc='docker compose'

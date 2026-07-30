@@ -26,13 +26,13 @@ jobs:
           sudo cp ~/go/bin/shfmt /usr/local/bin/shfmt
 
       - name: Bash syntax check
-        run: bash -n scripts/*.sh init.sh
+        run: bash -n scripts/*.sh init.sh scripts/ns
 
       - name: ShellCheck
-        run: shellcheck scripts/*.sh init.sh
+        run: shellcheck scripts/*.sh init.sh scripts/ns portable-dev-env/shell/ns-env.sh
 
       - name: shfmt format check
-        run: shfmt -d -i 4 -ci scripts/*.sh init.sh
+        run: shfmt -d -i 4 -ci scripts/*.sh init.sh scripts/ns scripts/lib/*.sh portable-dev-env/shell/ns-env.sh
 
       - name: JSON validation
         run: |
@@ -43,6 +43,9 @@ jobs:
 
       - name: Health check --help
         run: bash scripts/health-check-core.sh --help
+
+      - name: NS CLI help
+        run: bash scripts/ns help
 
       - name: Setup --dry-run
         run: bash scripts/neuro-spicy-setup-core.sh --dry-run
@@ -55,6 +58,14 @@ jobs:
 
       - name: Unit & integration tests (TDD)
         run: bash tests/run.sh
+
+      - name: Fish adapter syntax
+        run: |
+          if command -v fish >/dev/null 2>&1; then
+            fish -n portable-dev-env/shell/aliases.fish
+          else
+            echo "skip: fish not on runner"
+          fi
 
       - name: Integration smoke (network)
         run: bash scripts/test-integration.sh

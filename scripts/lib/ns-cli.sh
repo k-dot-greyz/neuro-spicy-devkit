@@ -4,12 +4,14 @@
 NS_CLI_VERBOSE=false
 NS_CLI_QUIET=false
 NS_CLI_NON_INTERACTIVE=false
+NS_CLI_DRY_RUN=false
 NS_CLI_WANTS_HELP=false
 
 ns_cli_reset() {
     NS_CLI_VERBOSE=false
     NS_CLI_QUIET=false
     NS_CLI_NON_INTERACTIVE=false
+    NS_CLI_DRY_RUN=false
     NS_CLI_WANTS_HELP=false
 }
 
@@ -28,6 +30,10 @@ ns_cli_parse() {
                 ;;
             --non-interactive | -y)
                 NS_CLI_NON_INTERACTIVE=true
+                shift
+                ;;
+            --dry-run | -n)
+                NS_CLI_DRY_RUN=true
                 shift
                 ;;
             --help | -h)

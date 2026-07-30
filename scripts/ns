@@ -1,0 +1,97 @@
+#!/usr/bin/env bash
+# Unified CLI entry: check | setup | doctor | help
+# Engine is always bash; interactive shells use portable-dev-env/shell adapters.
+
+set -euo pipefail
+
+SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
+# shellcheck source=lib/ns-exit-codes.sh
+source "$SCRIPT_DIR/lib/ns-exit-codes.sh"
+# shellcheck source=lib/ns-cli.sh
+source "$SCRIPT_DIR/lib/ns-cli.sh"
+
+ns_usage() {
+    cat <<'EOF'
+Neuro-Spicy DevKit CLI (bash engine)
+
+Usage:
+  ns <command> [options] [args...]
+
+Commands:
+  check     Run health-check-core.sh
+  setup     Run neuro-spicy-setup-core.sh
+  doctor    Run doctor-core.sh (deep diagnostic)
+  help      Show this message
+
+Global options (before or after command):
+  --verbose, -v
+  --quiet, -q
+  --non-interactive, -y
+  --dry-run, -n
+  --help, -h
+
+Examples:
+  ns check --verbose
+  ns setup --dry-run
+  ns doctor --dry-run
+EOF
+}
+
+ns_dispatch() {
+    local cmd="${1:-}"
+    shift || true
+
+    case "$cmd" in
+        check | health)
+            exec bash "$SCRIPT_DIR/health-check-core.sh" "$@"
+            ;;
+        setup)
+            exec bash "$SCRIPT_DIR/neuro-spicy-setup-core.sh" "$@"
+            ;;
+        doctor)
+            exec bash "$SCRIPT_DIR/doctor-core.sh" "$@"
+            ;;
+        help | '')
+            ns_usage
+            exit "$NS_EXIT_SUCCESS"
+            ;;
+        *)
+            echo "ns: unknown command: $cmd" >&2
+            ns_usage >&2
+            exit "$NS_EXIT_ERROR"
+            ;;
+    esac
+}
+
+main() {
+    ns_cli_reset
+    ns_cli_parse "$@"
+
+    if [[ "${NS_CLI_WANTS_HELP:-false}" == "true" && ${#NS_CLI_REMAINING[@]} -eq 0 ]]; then
+        ns_usage
+        exit "$NS_EXIT_SUCCESS"
+    fi
+
+    local -a forwarded=()
+    local subcmd=""
+    local i arg
+
+  if [[ ${#NS_CLI_REMAINING[@]} -eq 0 ]]; then
+        ns_usage
+        exit "$NS_EXIT_SUCCESS"
+    fi
+
+    subcmd="${NS_CLI_REMAINING[0]}"
+    for ((i = 1; i < ${#NS_CLI_REMAINING[@]}; i++)); do
+        forwarded+=("${NS_CLI_REMAINING[i]}")
+    done
+
+    [[ "${NS_CLI_VERBOSE:-false}" == "true" ]] && forwarded=(--verbose "${forwarded[@]}")
+    [[ "${NS_CLI_QUIET:-false}" == "true" ]] && forwarded=(--quiet "${forwarded[@]}")
+    [[ "${NS_CLI_NON_INTERACTIVE:-false}" == "true" ]] && forwarded=(--non-interactive "${forwarded[@]}")
+    [[ "${NS_CLI_DRY_RUN:-false}" == "true" ]] && forwarded=(--dry-run "${forwarded[@]}")
+
+    ns_dispatch "$subcmd" "${forwarded[@]}"
+}
+
+main "$@"
