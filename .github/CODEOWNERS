@@ -1,0 +1,20 @@
+# Neuro-Spicy DevKit — Code Owners
+# Owners are automatically requested for review on PRs touching their paths.
+# https://docs.github.com/en/repositories/managing-your-repositorys-settings-and-features/customizing-your-repository/about-code-owners
+
+# Default owner for everything
+* @k-dot-greyz
+
+# Scripts (core product)
+/scripts/ @k-dot-greyz
+
+# Security-sensitive files
+/scripts/setup-github-token.* @k-dot-greyz
+/.github/workflows/ @k-dot-greyz
+/.shellcheckrc @k-dot-greyz
+
+# Docker (hardened container)
+/portable-dev-env/openclaw/docker/ @k-dot-greyz
+
+# Configuration templates
+/portable-dev-env/ @k-dot-greyz
