@@ -55,11 +55,11 @@ The scripts are the product. Key entry points:
 
 3. **Interactive scripts block.** `neuro-spicy-init.sh` uses `read` prompts throughout. Never run it non-interactively. Use `neuro-spicy-setup-core.sh --dry-run` or individual functions instead.
 
-4. **`git-push-retry.sh` doesn't exist.** Referenced in `test-bash-scripts.sh` but never created. The test script logs `ERROR: Script not found: git-push-retry.sh` and moves on.
+4. **`git-push-retry.sh` doesn't exist.** Referenced in `test-bash-scripts.sh` but never created. The test script silently skips it.
 
 ### File layout
 
-```text
+```
 scripts/                 # All bash/ps1 scripts (the product)
 portable-dev-env/        # Editor configs, profiles, templates
   cursor/                # Cursor AI rules + memories
