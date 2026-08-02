@@ -26,7 +26,7 @@ shfmt -d -i 4 -ci scripts/*.sh init.sh # formatting check (no write)
 shfmt -w -i 4 -ci scripts/*.sh         # auto-format in place
 ```
 
-Config: `.shellcheckrc` (severity=warning, targeted inline disables only).
+Config: `.shellcheckrc` (severity=warning, disables SC2034/SC1091).
 
 ### Test
 
@@ -53,7 +53,7 @@ The scripts are the product. Key entry points:
 
 1. **`set -euo pipefail` + optional checks = early exit.** `health-check-core.sh` exits on first non-zero return (e.g., missing GitHub token, Cursor, VSCode). In headless VMs this is expected. Pass `GITHUB_TOKEN=<any_value>` to get past the token check if needed.
 
-2. **No Cursor/VSCode/OpenClaw on cloud VMs.** The health check checks for all three editors. They won't be found in headless VMs — that's fine. The `.vscode/` and `portable-dev-env/openclaw/` configs are for human devs using the repo locally.
+2. **No Cursor/VSCode on cloud VMs.** The health check and setup scripts check for these editors. They won't be found — that's fine. The `.vscode/` workspace configs are for human devs using the repo locally.
 
 3. **Interactive scripts block.** `neuro-spicy-init.sh` uses `read` prompts throughout. Never run it non-interactively. Use `neuro-spicy-setup-core.sh --dry-run` or individual functions instead.
 
@@ -65,7 +65,6 @@ The scripts are the product. Key entry points:
 scripts/                 # All bash/ps1 scripts (the product)
 portable-dev-env/        # Editor configs, profiles, templates
   cursor/                # Cursor AI rules + memories
-  openclaw/              # OpenClaw config template + workspace (SOUL.md, AGENTS.md)
   vscode/                # VSCode settings + extensions templates
   profiles/templates/    # Profile templates (e.g., frontend-developer.json)
 docs/                    # Documentation
