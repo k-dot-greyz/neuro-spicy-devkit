@@ -61,7 +61,7 @@ if ($DryRun) {
     Write-ColorOutput "🔍 DRY RUN — would:" "Yellow"
     Write-ColorOutput "  1. Prompt for GitHub Personal Access Token" "Cyan"
     Write-ColorOutput "  2. Validate token against api.github.com" "Cyan"
-    Write-ColorOutput "  3. Store in PowerShell profile (ACL-restricted credentials file)" "Cyan"
+    Write-ColorOutput "  3. Store as user-level environment variable" "Cyan"
     exit 0
 }
 
@@ -94,16 +94,10 @@ Write-ColorOutput "  4. Copy the token (you won't see it again!)" "Cyan"
 Write-ColorOutput ""
 
 # Prompt
-# Prompt (masked input)
 $secureToken = Read-Host "Enter your GitHub Personal Access Token" -AsSecureString
-$bstr = [Runtime.InteropServices.Marshal]::SecureStringToBSTR($secureToken)
-try {
-    $tokenInput = [Runtime.InteropServices.Marshal]::PtrToStringBSTR($bstr)
-} finally {
-    if ($bstr -ne [IntPtr]::Zero) {
-        [Runtime.InteropServices.Marshal]::ZeroFreeBSTR($bstr)
-    }
-}
+$tokenInput = [Runtime.InteropServices.Marshal]::PtrToStringAuto(
+    [Runtime.InteropServices.Marshal]::SecureStringToBSTR($secureToken)
+)
 
 # Validate length
 if ($tokenInput.Length -lt 40) {
@@ -118,32 +112,11 @@ if (-not (Test-GitHubToken -Token $tokenInput)) {
     exit 1
 }
 
-# Store in user profile for persistence (sourced on shell start)
-$profileDir = Split-Path $PROFILE -Parent
-if (-not (Test-Path $profileDir)) { New-Item -ItemType Directory -Path $profileDir -Force | Out-Null }
-
-$credsFile = Join-Path $profileDir "neuro-spicy-credentials.ps1"
-Set-Content -Path $credsFile -Value "`$env:GITHUB_TOKEN = '$tokenInput'" -Force
-
-# Restrict permissions to current user only
-$acl = Get-Acl $credsFile
-$acl.SetAccessRuleProtection($true, $false)
-$rule = New-Object System.Security.AccessControl.FileSystemAccessRule(
-    [System.Security.Principal.WindowsIdentity]::GetCurrent().Name,
-    "FullControl", "Allow")
-$acl.SetAccessRule($rule)
-Set-Acl -Path $credsFile -AclObject $acl
-
-# Wire into PowerShell profile if not already sourced
-$sourceLine = ". '$credsFile'"
-if (-not (Test-Path $PROFILE) -or -not (Select-String -Path $PROFILE -Pattern "neuro-spicy-credentials" -Quiet)) {
-    Add-Content -Path $PROFILE -Value $sourceLine
-}
-
-# Set for current session
+# Store as user-level env var (persists across sessions)
+[System.Environment]::SetEnvironmentVariable("GITHUB_TOKEN", $tokenInput, "User")
 $env:GITHUB_TOKEN = $tokenInput
-Write-ColorOutput "✅ Token saved to $credsFile (ACL-restricted)" "Green"
+Write-ColorOutput "✅ Token stored as user-level environment variable" "Green"
 
 Write-ColorOutput ""
 Write-ColorOutput "🎉 GitHub token setup complete!" "Green"
-Write-ColorOutput "Token is available in this session and future shells via profile." "Cyan"
+Write-ColorOutput "Token is available in this session and future shells." "Cyan"
