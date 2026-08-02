@@ -37,6 +37,7 @@ bash -n scripts/*.sh init.sh                        # syntax validation
 ```
 
 See `docs/TDD_ORCHESTRATION.md` and `tasks.md` for the epic TDD backlog.
+For GitHub labels, linking, and merge-train PR hygiene: `docs/LABELS_AND_LINKING.md`.
 
 Legacy note: `scripts/test-bash-scripts.sh` is fixed for `set -e` + increment; prefer `./tests/run.sh`.
 

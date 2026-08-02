@@ -1,0 +1,49 @@
+name: Security / unsafe IO
+description: Credentials, PAT, curl|bash, supply chain
+title: "[Security] "
+labels:
+  - security
+  - wave-1-sanitize-io
+body:
+  - type: markdown
+    attributes:
+      value: |
+        **Block** resolver real installs and epic mass automation until sanitize wave is green.
+        Prefer failing tests in `tests/` before changing install paths.
+  - type: checkboxes
+    id: risk
+    attributes:
+      label: Risk type
+      options:
+        - label: unsafe-io
+        - label: credentials
+  - type: dropdown
+    id: lane
+    attributes:
+      label: Primary lane
+      options:
+        - lane-bash
+        - lane-powershell
+        - lane-docker
+    validations:
+      required: true
+  - type: textarea
+    id: threat
+    attributes:
+      label: Threat / current behavior
+    validations:
+      required: true
+  - type: textarea
+    id: fix
+    attributes:
+      label: Intended fix
+      description: Checksum, vendored script, credentials file, env-only PAT, etc.
+    validations:
+      required: true
+  - type: textarea
+    id: links
+    attributes:
+      label: Links
+      description: AUDIT row, related issues (#8–#12, #17), blocking PRs
+    validations:
+      required: true

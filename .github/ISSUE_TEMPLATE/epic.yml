@@ -1,0 +1,53 @@
+name: Epic / program slice
+description: Multi-PR outcome (e.g. full-stack orchestrator)
+title: "[Epic] "
+labels:
+  - epic
+  - merge-train
+body:
+  - type: markdown
+    attributes:
+      value: |
+        Use for initiatives that span several PRs. Do not `Closes` the epic from child PRs until the checklist is done.
+        See [LABELS_AND_LINKING.md](https://github.com/k-dot-greyz/neuro-spicy-devkit/blob/main/docs/LABELS_AND_LINKING.md).
+  - type: textarea
+    id: vision
+    attributes:
+      label: Vision / outcome
+      description: What the world looks like when this epic is done
+    validations:
+      required: true
+  - type: dropdown
+    id: wave
+    attributes:
+      label: Gate / wave
+      options:
+        - wave-0-merge
+        - wave-1-sanitize-io
+        - wave-2-resolver
+        - wave-3-epic
+    validations:
+      required: true
+  - type: textarea
+    id: checklist
+    attributes:
+      label: Checklist
+      description: Markdown checkboxes for tracking
+      value: |
+        - [ ] Item 1
+  - type: textarea
+    id: links
+    attributes:
+      label: Links
+      description: "Parent/child issues and PRs. Example: Depends on #21; Child issues: #8, #9"
+    validations:
+      required: true
+  - type: checkboxes
+    id: lanes
+    attributes:
+      label: Lanes (parallel ownership)
+      options:
+        - label: lane-bash
+        - label: lane-powershell
+        - label: lane-docker
+        - label: lane-tdd

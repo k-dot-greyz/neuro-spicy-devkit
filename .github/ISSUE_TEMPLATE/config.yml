@@ -1,0 +1,8 @@
+blank_issues_enabled: true
+contact_links:
+  - name: Labels and linking guide
+    url: https://github.com/k-dot-greyz/neuro-spicy-devkit/blob/main/docs/LABELS_AND_LINKING.md
+    about: How to tag issues and PRs on the merge train
+  - name: TDD orchestration
+    url: https://github.com/k-dot-greyz/neuro-spicy-devkit/blob/main/docs/TDD_ORCHESTRATION.md
+    about: Red-green-refactor loop for bash libs
