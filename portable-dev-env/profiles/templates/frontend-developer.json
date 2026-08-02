@@ -116,23 +116,6 @@
             }
           }
         }
-      },
-      {
-        "name": "openclaw",
-        "config": {
-          "model": {
-            "primary": "anthropic/claude-sonnet-4-6"
-          },
-          "tools": ["shell", "browser", "filesystem"],
-          "workspace": {
-            "soul": "portable-dev-env/openclaw/workspace/SOUL.md",
-            "agents": "portable-dev-env/openclaw/workspace/AGENTS.md"
-          },
-          "gateway": {
-            "port": 18789,
-            "ui": true
-          }
-        }
       }
     ],
     "mcps": [
