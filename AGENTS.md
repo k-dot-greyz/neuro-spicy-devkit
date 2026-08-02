@@ -1,6 +1,6 @@
 # AGENTS.md
 
-## Cursor Cloud specific instructions
+## Cursor Cloud-specific instructions
 
 **Neuro-Spicy DevKit** — a shell-script CLI toolkit for bootstrapping dev environments. No runtime services, no package managers, no build step. The product IS the scripts.
 
@@ -31,20 +31,20 @@ Config: `.shellcheckrc` (severity=warning, targeted inline disables only).
 ### Test
 
 ```sh
+bash scripts/test-integration.sh                      # full integration suite (18 tests)
 bash -n scripts/*.sh init.sh                          # syntax validation
 bash scripts/health-check-core.sh --help              # verify help flag
-bash scripts/neuro-spicy-setup-core.sh --help         # verify help flag
 bash scripts/neuro-spicy-setup-core.sh --dry-run      # verify dry-run
 ```
 
-The built-in `scripts/test-bash-scripts.sh` has a bug: `set -euo pipefail` + `((total_tests++))` from 0 = instant exit. Don't use it — run the commands above instead.
+The built-in `scripts/test-bash-scripts.sh` has a known bug (`set -euo pipefail` + `((total_tests++))` from 0). Use `test-integration.sh` instead.
 
 ### Run / demo
 
 The scripts are the product. Key entry points:
 
 - `./init.sh` — interactive launcher (**requires TTY** — skip in headless agents)
-- `./scripts/health-check-core.sh [--verbose] [--fix]` — environment validation
+- `./scripts/health-check-core.sh [--verbose] [--fix]` — environment validation (13 checks)
 - `./scripts/neuro-spicy-setup-core.sh [--components core|minimal|all] [--dry-run] [--skip-backup]` — setup runner
 - `./scripts/git-push-retry.sh [--branch <name>] [--dry-run]` — reliable git push with exponential backoff
 - `./scripts/setup-github-token.sh [--test] [--dry-run]` — GitHub token setup (secure creds storage)
@@ -53,11 +53,11 @@ The scripts are the product. Key entry points:
 
 ```sh
 cd portable-dev-env/openclaw/docker
-cp .env.example .env                    # fill in your API key
-docker compose build                    # multi-stage, non-root, alpine
-docker compose up -d                    # gateway at http://127.0.0.1:18789
-docker compose logs -f openclaw         # watch logs
-docker compose run --rm openclaw openclaw doctor  # health check inside container
+cp .env.example .env # fill in your API key
+docker compose build # multi-stage, non-root, alpine
+docker compose up -d # gateway at http://127.0.0.1:18789
+docker compose logs -f openclaw # watch logs
+docker compose run --rm openclaw openclaw doctor # health check inside container
 ```
 
 Security posture: non-root (UID 1001), read-only rootfs, `no-new-privileges`, all caps dropped except `NET_BIND_SERVICE`, 2GB mem limit, 256 PID limit, localhost-only port bind, tini init for signal handling. See `docker/Dockerfile` for full details.
@@ -72,20 +72,31 @@ Security posture: non-root (UID 1001), read-only rootfs, `no-new-privileges`, al
 
 4. **`scripts/setup-github-token.sh` requires TTY.** It prompts for token input interactively. Use `--test` to validate an existing token non-interactively, or `--dry-run` to preview.
 
+### Contributing
+
+See `CONTRIBUTING.md` for full code standards, commit style, and security policy. Key rules:
+- Every script supports `--help` and `--dry-run`
+- `printf %q` for writing shell vars to files (prevents injection)
+- Credentials in `~/.config/neuro-spicy/credentials` (chmod 600), never in code
+- CI runs automatically on every PR — check `bash -n`, shellcheck, shfmt, integration tests
+
 ### File layout
 
 ```text
-scripts/                 # All bash/ps1 scripts (the product)
-portable-dev-env/        # Editor configs, profiles, templates
-  cursor/                # Cursor AI rules + memories
-  openclaw/              # OpenClaw config template + workspace (SOUL.md, AGENTS.md)
-    docker/              # Hardened Dockerfile, compose, .env.example
-  vscode/                # VSCode settings + extensions templates
-  profiles/templates/    # Profile templates (e.g., frontend-developer.json)
-docs/                    # Documentation
-.vscode/                 # THIS repo's workspace settings (shellcheck, shfmt, format-on-save)
-.editorconfig            # Formatting rules
-.shellcheckrc            # Shellcheck config
-.gitignore               # Excludes backup-*/, profiles/user/, .env
-.gitattributes           # LF for .sh, CRLF for .ps1
+scripts/                  # All bash/ps1 scripts (the product)
+portable-dev-env/         # Editor configs, profiles, templates
+  cursor/                 # Cursor AI rules + memories
+  openclaw/               # OpenClaw config template + workspace (SOUL.md, AGENTS.md)
+    docker/               # Hardened Dockerfile, compose, .env.example
+  vscode/                 # VSCode settings + extensions templates
+  profiles/templates/     # Profile templates (e.g., frontend-developer.json)
+  shell/                  # Shell aliases and shortcuts
+docs/                     # Documentation
+tests/                    # Test framework (unit + integration)
+.github/                  # CI workflows, CODEOWNERS
+.vscode/                  # THIS repo's workspace settings (shellcheck, shfmt, format-on-save)
+.editorconfig             # Formatting rules
+.shellcheckrc             # Shellcheck config
+.gitignore                # Excludes backup-*/, profiles/user/, .env
+.gitattributes            # LF for .sh, CRLF for .ps1
 ```
