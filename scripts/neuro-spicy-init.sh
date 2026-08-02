@@ -359,11 +359,10 @@ create_user_profile() {
     "tags": ["user", "custom", "personal"],
     "platforms": ["windows", "linux", "macos"]
   },
-  "user": {
+    "user": {
     "name": "$GIT_USER_NAME",
     "email": "$GIT_USER_EMAIL",
-    "github_username": "$GITHUB_USERNAME",
-    "githubToken": "$GITHUB_TOKEN"
+    "github_username": "$GITHUB_USERNAME"
   },
   "tools": {
     "nodejs": {
