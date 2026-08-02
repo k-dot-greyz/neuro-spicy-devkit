@@ -122,23 +122,23 @@ test_nodejs() {
         node_version=$(node --version 2>&1)
         npm_version=$(npm --version 2>&1)
         
-        if [[ "$node_version" =~ v(1[8-9]|[2-9][0-9]|[1-9][0-9]{2,}) ]]; then
+        if [[ "$node_version" =~ v(1[8-9]|2[0-9]) ]]; then
             log_success "Node.js: $node_version"
             log_success "npm: $npm_version"
             return 0
         else
             log_error "Node.js: Version 18+ required (found: $node_version)"
             if [[ "$FIX" == "true" ]]; then
-                echo -e "${BLUE}💡 Install: nvm install --lts${NC}"
-                echo -e "${BLUE}💡 Or: brew install node${NC}"
+                echo -e "${BLUE}💡 Install: curl -fsSL https://deb.nodesource.com/setup_18.x | sudo -E bash - && sudo apt-get install -y nodejs${NC}"
+                echo -e "${BLUE}💡 Or: brew install node@18${NC}"
             fi
             return 1
         fi
     else
         log_error "Node.js: Not installed"
         if [[ "$FIX" == "true" ]]; then
-            echo -e "${BLUE}💡 Install: nvm install --lts${NC}"
-            echo -e "${BLUE}💡 Or: brew install node${NC}"
+            echo -e "${BLUE}💡 Install: curl -fsSL https://deb.nodesource.com/setup_18.x | sudo -E bash - && sudo apt-get install -y nodejs${NC}"
+            echo -e "${BLUE}💡 Or: brew install node@18${NC}"
         fi
         return 1
     fi
@@ -151,14 +151,14 @@ test_python() {
         local python_version
         python_version=$(python3 --version 2>&1)
         
-        if [[ "$python_version" =~ Python\ 3\.([8-9]|[1-9][0-9]) ]]; then
+        if [[ "$python_version" =~ Python\ 3\.([8-9]|1[0-9]) ]]; then
             log_success "Python: $python_version"
             return 0
         else
             log_error "Python: Version 3.8+ required (found: $python_version)"
             if [[ "$FIX" == "true" ]]; then
-                echo -e "${BLUE}💡 Install: sudo apt-get install python3${NC}"
-                echo -e "${BLUE}💡 Or: brew install python3${NC}"
+                echo -e "${BLUE}💡 Install: sudo apt-get install python3.11${NC}"
+                echo -e "${BLUE}💡 Or: brew install python@3.11${NC}"
             fi
             return 1
         fi
@@ -166,22 +166,22 @@ test_python() {
         local python_version
         python_version=$(python --version 2>&1)
         
-        if [[ "$python_version" =~ Python\ 3\.([8-9]|[1-9][0-9]) ]]; then
+        if [[ "$python_version" =~ Python\ 3\.([8-9]|1[0-9]) ]]; then
             log_success "Python: $python_version"
             return 0
         else
             log_error "Python: Version 3.8+ required (found: $python_version)"
             if [[ "$FIX" == "true" ]]; then
-                echo -e "${BLUE}💡 Install: sudo apt-get install python3${NC}"
-                echo -e "${BLUE}💡 Or: brew install python3${NC}"
+                echo -e "${BLUE}💡 Install: sudo apt-get install python3.11${NC}"
+                echo -e "${BLUE}💡 Or: brew install python@3.11${NC}"
             fi
             return 1
         fi
     else
         log_error "Python: Not installed"
         if [[ "$FIX" == "true" ]]; then
-            echo -e "${BLUE}💡 Install: sudo apt-get install python3${NC}"
-            echo -e "${BLUE}💡 Or: brew install python3${NC}"
+            echo -e "${BLUE}💡 Install: sudo apt-get install python3.11${NC}"
+            echo -e "${BLUE}💡 Or: brew install python@3.11${NC}"
         fi
         return 1
     fi
