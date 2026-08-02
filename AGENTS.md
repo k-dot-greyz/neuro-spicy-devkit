@@ -2,73 +2,63 @@
 
 ## Cursor Cloud specific instructions
 
-**Neuro-Spicy DevKit** — a shell-script CLI toolkit for bootstrapping dev environments. No runtime services, no package managers, no build step. The product IS the scripts.
+This is a **shell-script CLI toolkit** (Neuro-Spicy DevKit) — there are no runtime services, no package managers, no build steps, and no installable dependencies. The entire product is Bash/PowerShell scripts + JSON/Markdown configs.
 
-### What's already ready after update script runs
+### Running scripts
 
-| Tool | Location | Purpose |
-|------|----------|---------|
-| shellcheck | `/usr/bin/shellcheck` | Bash linter (primary lint tool) |
-| shfmt | `/usr/local/bin/shfmt` | Bash formatter |
-| jq | `/usr/bin/jq` | JSON processor |
-| tree | `/usr/bin/tree` | Directory visualization |
-| git | system | Already configured |
-| node | system (nvm) | Validated by health check |
-| python3 | system | Validated by health check |
+- All scripts are in `scripts/` and the launcher is `init.sh` at the root.
+- Scripts must be executable: `chmod +x scripts/*.sh init.sh`
+- The interactive init (`scripts/neuro-spicy-init.sh`) requires TTY input — do **not** run it in a non-interactive cloud agent session.
 
-Scripts are pre-chmod'd executable. No `npm install` or `pip install` needed — ever.
+### Lint / static analysis
 
-### Lint
+- **shellcheck** — primary linter for all `.sh` files. Config in `.shellcheckrc`.
+  - `shellcheck scripts/*.sh init.sh` — full lint pass
+  - VSCode extension `timonwong.shellcheck` provides inline warnings
+- **shfmt** — shell formatter (installed via `go install mvdan.cc/sh/v3/cmd/shfmt@latest`, binary at `~/go/bin/shfmt`).
+  - `shfmt -d -i 4 -ci scripts/*.sh` — check formatting without modifying
+  - `shfmt -w -i 4 -ci scripts/*.sh` — auto-format in-place
+  - VSCode extension `foxundermoon.shell-format` provides format-on-save
+- **bash -n** — basic syntax check (subset of what shellcheck does)
+- The built-in `scripts/test-bash-scripts.sh` has a known bug: `set -euo pipefail` + `((total_tests++))` from 0 causes early exit. Run shellcheck/shfmt instead.
 
-```sh
-shellcheck scripts/*.sh init.sh        # static analysis (primary)
-shfmt -d -i 4 -ci scripts/*.sh init.sh # formatting check (no write)
-shfmt -w -i 4 -ci scripts/*.sh         # auto-format in place
-```
+### Testing
 
-Config: `.shellcheckrc` (severity=warning, disables SC2034/SC1091).
+- `shellcheck scripts/*.sh init.sh` — static analysis (preferred)
+- `bash -n scripts/*.sh` — syntax validation
+- `bash scripts/health-check-core.sh --help` and `bash scripts/neuro-spicy-setup-core.sh --help` — verify help flags
+- `bash scripts/neuro-spicy-setup-core.sh --dry-run` — verify dry-run mode
+- `shfmt -d -i 4 -ci scripts/*.sh` — formatting check
 
-### Test
+### Known health-check gotcha
 
-```sh
-bash -n scripts/*.sh init.sh                          # syntax validation
-bash scripts/health-check-core.sh --help              # verify help flag
-bash scripts/neuro-spicy-setup-core.sh --help         # verify help flag
-bash scripts/neuro-spicy-setup-core.sh --dry-run      # verify dry-run
-```
+`scripts/health-check-core.sh` uses `set -euo pipefail` and runs tool checks sequentially. If any check returns non-zero (e.g., GitHub token not set, Cursor not installed), the script exits immediately before reaching the summary. In headless cloud VMs, Cursor and VSCode will naturally be absent — this is expected. Pass `GITHUB_TOKEN=<value>` as an env var if you need to get past the token check.
 
-The built-in `scripts/test-bash-scripts.sh` has a bug: `set -euo pipefail` + `((total_tests++))` from 0 = instant exit. Don't use it — run the commands above instead.
+### Dev tools summary
 
-### Run / demo
+| Tool | Purpose | Install |
+|------|---------|---------|
+| shellcheck | Bash static analysis/linter | `apt install shellcheck` |
+| shfmt | Shell script formatter | `go install mvdan.cc/sh/v3/cmd/shfmt@latest` |
+| jq | JSON processor (for config files) | `apt install jq` |
+| tree | Directory visualization | `apt install tree` |
 
-The scripts are the product. Key entry points:
+### Editor setup
 
-- `./init.sh` — interactive launcher (**requires TTY** — skip in headless agents)
+- `.vscode/settings.json` — workspace settings with shellcheck + shfmt integration, format-on-save
+- `.vscode/extensions.json` — recommended extensions (shellcheck, shell-format, bash-ide, editorconfig, markdownlint, spell-checker)
+- `.editorconfig` — consistent formatting across editors (4-space indent for `.sh`, 2-space for `.json`)
+- `.shellcheckrc` — shellcheck config (severity=warning, disables SC2034/SC1091)
+
+### Key commands reference
+
+See `README.md` for full documentation. The main entry points are:
+- `./init.sh` — interactive launcher (requires TTY)
 - `./scripts/health-check-core.sh [--verbose] [--fix]` — environment validation
 - `./scripts/neuro-spicy-setup-core.sh [--components core|minimal|all] [--dry-run] [--skip-backup]` — setup runner
 
-### Gotchas
+### Security notes
 
-1. **`set -euo pipefail` + optional checks = early exit.** `health-check-core.sh` exits on first non-zero return (e.g., missing GitHub token, Cursor, VSCode). In headless VMs this is expected. Pass `GITHUB_TOKEN=<any_value>` to get past the token check if needed.
-
-2. **No Cursor/VSCode on cloud VMs.** The health check and setup scripts check for these editors. They won't be found — that's fine. The `.vscode/` workspace configs are for human devs using the repo locally.
-
-3. **Interactive scripts block.** `neuro-spicy-init.sh` uses `read` prompts throughout. Never run it non-interactively. Use `neuro-spicy-setup-core.sh --dry-run` or individual functions instead.
-
-4. **`git-push-retry.sh` doesn't exist.** Referenced in `test-bash-scripts.sh` but never created. The test script silently skips it.
-
-### File layout
-
-```
-scripts/                 # All bash/ps1 scripts (the product)
-portable-dev-env/        # Editor configs, profiles, templates
-  cursor/                # Cursor AI rules + memories
-  vscode/                # VSCode settings + extensions templates
-  profiles/templates/    # Profile templates (e.g., frontend-developer.json)
-docs/                    # Documentation
-.vscode/                 # THIS repo's workspace settings (shellcheck, shfmt, format-on-save)
-.editorconfig            # Formatting rules
-.shellcheckrc            # Shellcheck config
-.gitignore               # Excludes backup-*/, profiles/user/, .env
-.gitattributes           # LF for .sh, CRLF for .ps1
-```
+- `.gitignore` excludes `backup-*/` dirs and `portable-dev-env/profiles/user/` (may contain tokens/personal data)
+- `.gitattributes` enforces LF line endings for shell scripts (prevents cross-platform CRLF issues)
+- The interactive init writes GitHub tokens to `~/.bashrc` — be aware of this on shared systems
