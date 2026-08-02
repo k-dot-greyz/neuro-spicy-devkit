@@ -363,7 +363,7 @@ create_user_profile() {
     "name": "$GIT_USER_NAME",
     "email": "$GIT_USER_EMAIL",
     "github_username": "$GITHUB_USERNAME",
-    "githubToken": "$GITHUB_TOKEN"
+    "github_token_env": "GITHUB_TOKEN"
   },
   "tools": {
     "nodejs": {
