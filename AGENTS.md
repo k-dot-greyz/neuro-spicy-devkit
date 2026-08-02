@@ -49,19 +49,6 @@ The scripts are the product. Key entry points:
 - `./scripts/git-push-retry.sh [--branch <name>] [--dry-run]` — reliable git push with exponential backoff
 - `./scripts/setup-github-token.sh [--test] [--dry-run]` — GitHub token setup (secure creds storage)
 
-### OpenClaw Docker (hardened)
-
-```sh
-cd portable-dev-env/openclaw/docker
-cp .env.example .env                    # fill in your API key
-docker compose build                    # multi-stage, non-root, alpine
-docker compose up -d                    # gateway at http://127.0.0.1:18789
-docker compose logs -f openclaw         # watch logs
-docker compose run --rm openclaw openclaw doctor  # health check inside container
-```
-
-Security posture: non-root (UID 1001), read-only rootfs, `no-new-privileges`, all caps dropped except `NET_BIND_SERVICE`, 2GB mem limit, 256 PID limit, localhost-only port bind, tini init for signal handling. See `docker/Dockerfile` for full details.
-
 ### Gotchas
 
 1. **`set -euo pipefail` + optional checks = early exit.** `health-check-core.sh` exits on first non-zero return (e.g., missing GitHub token, Cursor, VSCode). In headless VMs this is expected. Pass `GITHUB_TOKEN=<any_value>` to get past the token check if needed.
@@ -79,7 +66,6 @@ scripts/                 # All bash/ps1 scripts (the product)
 portable-dev-env/        # Editor configs, profiles, templates
   cursor/                # Cursor AI rules + memories
   openclaw/              # OpenClaw config template + workspace (SOUL.md, AGENTS.md)
-    docker/              # Hardened Dockerfile, compose, .env.example
   vscode/                # VSCode settings + extensions templates
   profiles/templates/    # Profile templates (e.g., frontend-developer.json)
 docs/                    # Documentation
