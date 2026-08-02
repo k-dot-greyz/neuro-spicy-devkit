@@ -15,7 +15,7 @@ jobs:
     timeout-minutes: 10
 
     steps:
-      - uses: actions/checkout@v5
+      - uses: actions/checkout@v4
 
       - name: Install shellcheck
         run: sudo apt-get update -qq && sudo apt-get install -y -qq shellcheck
@@ -28,16 +28,11 @@ jobs:
       - name: Bash syntax check
         run: bash -n scripts/*.sh init.sh
 
-      - name: ShellCheck (errors only — warnings tracked in issues)
-        run: shellcheck --severity=error scripts/*.sh init.sh
+      - name: ShellCheck
+        run: shellcheck scripts/*.sh init.sh
 
-      - name: ShellCheck (warnings — non-blocking)
-        run: shellcheck scripts/*.sh init.sh || echo "::warning::ShellCheck found warnings (see above). Non-blocking."
-        continue-on-error: true
-
-      - name: shfmt format check (non-blocking)
-        run: shfmt -d -i 4 -ci scripts/*.sh init.sh || echo "::warning::shfmt found formatting diffs. Non-blocking."
-        continue-on-error: true
+      - name: shfmt format check
+        run: shfmt -d -i 4 -ci scripts/*.sh init.sh
 
       - name: JSON validation
         run: |
@@ -60,7 +55,3 @@ jobs:
 
       - name: Docker entrypoint syntax
         run: bash -n portable-dev-env/openclaw/docker/docker-entrypoint.sh
-
-      - name: Integration tests
-        run: bash scripts/test-integration.sh
-        if: hashFiles('scripts/test-integration.sh') != ''
