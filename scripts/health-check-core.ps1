@@ -114,35 +114,6 @@ function Test-GitHubToken {
     }
 }
 
-function Test-OpenClaw {
-    Write-ColorOutput "🔍 Checking OpenClaw..." "Cyan"
-    
-    try {
-        $ocVersion = openclaw --version 2>&1
-        if ($ocVersion) {
-            Write-ColorOutput "✅ OpenClaw: $($ocVersion[0])" "Green"
-            
-            if (Test-Path "$env:USERPROFILE\.openclaw\openclaw.json") {
-                Write-ColorOutput "✅ OpenClaw config: Found" "Green"
-            } else {
-                Write-ColorOutput "⚠️ OpenClaw config: Not initialized" "Yellow"
-                if ($Fix) {
-                    Write-ColorOutput "💡 Run: openclaw onboard" "Blue"
-                }
-            }
-            return $true
-        }
-    } catch {
-        Write-ColorOutput "⚠️ OpenClaw: Not installed" "Yellow"
-        if ($Fix) {
-            Write-ColorOutput "💡 Install: npm install -g openclaw@latest" "Blue"
-            Write-ColorOutput "💡 Or: iwr -useb https://openclaw.ai/install.ps1 | iex" "Blue"
-        }
-        return $false
-    }
-    return $false
-}
-
 function Test-Cursor {
     Write-ColorOutput "🔍 Checking Cursor..." "Cyan"
     
@@ -220,7 +191,6 @@ $results = @{
     "Node.js" = Test-NodeJS
     "Python" = Test-Python
     "GitHub Token" = Test-GitHubToken
-    "OpenClaw" = Test-OpenClaw
     "Cursor" = Test-Cursor
     "VSCode" = Test-VSCode
 }

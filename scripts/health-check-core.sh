@@ -216,34 +216,6 @@ test_cursor() {
     return 1
 }
 
-test_openclaw() {
-    log_info "Checking OpenClaw..."
-    
-    if command -v openclaw >/dev/null 2>&1; then
-        local oc_version
-        oc_version=$(openclaw --version 2>&1 | head -n1)
-        log_success "OpenClaw: $oc_version"
-        
-        # Check if config exists
-        if [[ -f "$HOME/.openclaw/openclaw.json" ]]; then
-            log_success "OpenClaw config: Found"
-        else
-            log_warn "OpenClaw config: Not initialized"
-            if [[ "$FIX" == "true" ]]; then
-                echo -e "${BLUE}💡 Run: openclaw onboard${NC}"
-            fi
-        fi
-        return 0
-    else
-        log_warn "OpenClaw: Not installed"
-        if [[ "$FIX" == "true" ]]; then
-            echo -e "${BLUE}💡 Install: npm install -g openclaw@latest${NC}"
-            echo -e "${BLUE}💡 Or: curl -fsSL https://openclaw.ai/install.sh | bash${NC}"
-        fi
-        return 1
-    fi
-}
-
 test_vscode() {
     log_info "Checking VSCode..."
     
@@ -329,9 +301,6 @@ python_result=$?
 test_github_token
 github_result=$?
 
-test_openclaw
-openclaw_result=$?
-
 test_cursor
 cursor_result=$?
 
@@ -339,7 +308,7 @@ test_vscode
 vscode_result=$?
 
 # Show summary
-show_summary "$git_result" "$nodejs_result" "$python_result" "$github_result" "$openclaw_result" "$cursor_result" "$vscode_result"
+show_summary "$git_result" "$nodejs_result" "$python_result" "$github_result" "$cursor_result" "$vscode_result"
 
 if [[ "$VERBOSE" == "true" ]]; then
     echo ""
