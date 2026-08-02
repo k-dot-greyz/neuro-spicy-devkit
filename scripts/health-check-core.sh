@@ -216,222 +216,6 @@ test_cursor() {
     return 1
 }
 
-test_rust() {
-    log_info "Checking Rust..."
-
-    if command -v rustc >/dev/null 2>&1; then
-        local rust_version
-        rust_version=$(rustc --version 2>&1)
-        log_success "Rust: $rust_version"
-
-        if command -v cargo >/dev/null 2>&1; then
-            log_success "Cargo: $(cargo --version 2>&1)"
-        else
-            log_warn "Cargo: Not found (should come with rustup)"
-        fi
-
-        if command -v clippy-driver >/dev/null 2>&1 || rustup component list 2>/dev/null | grep -q "clippy.*installed"; then
-            log_success "Clippy: Installed"
-        else
-            log_warn "Clippy: Not installed"
-            if [[ "$FIX" == "true" ]]; then
-                echo -e "${BLUE}💡 Install: rustup component add clippy${NC}"
-            fi
-        fi
-
-        if command -v rustfmt >/dev/null 2>&1; then
-            log_success "Rustfmt: Installed"
-        else
-            log_warn "Rustfmt: Not installed"
-            if [[ "$FIX" == "true" ]]; then
-                echo -e "${BLUE}💡 Install: rustup component add rustfmt${NC}"
-            fi
-        fi
-
-        return 0
-    else
-        log_warn "Rust: Not installed"
-        if [[ "$FIX" == "true" ]]; then
-            echo -e "${BLUE}💡 Install: curl --proto '=https' --tlsv1.2 -sSf https://sh.rustup.rs | sh${NC}"
-        fi
-        return 1
-    fi
-}
-
-test_typescript() {
-    log_info "Checking TypeScript toolchain..."
-
-    local ts_found=false
-
-    if command -v tsc >/dev/null 2>&1; then
-        log_success "TypeScript: $(tsc --version 2>&1)"
-        ts_found=true
-    else
-        log_warn "TypeScript (tsc): Not found"
-        if [[ "$FIX" == "true" ]]; then
-            echo -e "${BLUE}💡 Install: npm install -g typescript${NC}"
-        fi
-    fi
-
-    if command -v pnpm >/dev/null 2>&1; then
-        log_success "pnpm: $(pnpm --version 2>&1)"
-    else
-        log_warn "pnpm: Not found"
-        if [[ "$FIX" == "true" ]]; then
-            echo -e "${BLUE}💡 Install: npm install -g pnpm${NC}"
-        fi
-    fi
-
-    if command -v npx >/dev/null 2>&1; then
-        log_success "npx: Available"
-    fi
-
-    if [[ "$ts_found" == "true" ]]; then return 0; else return 1; fi
-}
-
-test_astro_vite() {
-    log_info "Checking Astro / Vite..."
-
-    local found=false
-
-    if command -v astro >/dev/null 2>&1; then
-        log_success "Astro CLI: $(astro --version 2>&1 | head -1)"
-        found=true
-    else
-        log_warn "Astro CLI: Not found (project-local is fine)"
-        if [[ "$FIX" == "true" ]]; then
-            echo -e "${BLUE}💡 Scaffold: npm create astro@latest${NC}"
-        fi
-    fi
-
-    if command -v vite >/dev/null 2>&1; then
-        log_success "Vite: $(vite --version 2>&1 | head -1)"
-        found=true
-    elif [[ -f "node_modules/.bin/vite" ]]; then
-        log_success "Vite: Found (project-local)"
-        found=true
-    else
-        log_warn "Vite: Not found (project-local is fine)"
-        if [[ "$FIX" == "true" ]]; then
-            echo -e "${BLUE}💡 Install: npm install -D vite${NC}"
-        fi
-    fi
-
-    if [[ "$found" == "true" ]]; then return 0; else return 1; fi
-}
-
-test_playwright() {
-    log_info "Checking Playwright..."
-
-    if command -v playwright >/dev/null 2>&1 || npx playwright --version >/dev/null 2>&1; then
-        local pw_version
-        pw_version=$(npx playwright --version 2>&1 | head -1) || pw_version="installed"
-        log_success "Playwright: $pw_version"
-        return 0
-    else
-        log_warn "Playwright: Not found"
-        if [[ "$FIX" == "true" ]]; then
-            echo -e "${BLUE}💡 Install: npm install -D @playwright/test${NC}"
-            echo -e "${BLUE}💡 Then: npx playwright install${NC}"
-        fi
-        return 1
-    fi
-}
-
-test_ai_cli() {
-    log_info "Checking AI CLI tools..."
-
-    local found=0
-
-    if command -v claude >/dev/null 2>&1; then
-        log_success "Claude CLI: Installed"
-        found=$((found + 1))
-    else
-        log_warn "Claude CLI: Not found"
-        if [[ "$FIX" == "true" ]]; then
-            echo -e "${BLUE}💡 Install: npm install -g @anthropic-ai/claude-cli${NC}"
-        fi
-    fi
-
-    if command -v gemini >/dev/null 2>&1; then
-        log_success "Gemini CLI: Installed"
-        found=$((found + 1))
-    else
-        log_warn "Gemini CLI: Not found"
-        if [[ "$FIX" == "true" ]]; then
-            echo -e "${BLUE}💡 Install: npm install -g @anthropic-ai/gemini-cli${NC}"
-        fi
-    fi
-
-    if command -v docker >/dev/null 2>&1; then
-        log_success "Docker: $(docker --version 2>&1 | head -1)"
-        found=$((found + 1))
-        if command -v docker-compose >/dev/null 2>&1 || docker compose version >/dev/null 2>&1; then
-            log_success "Docker Compose: Available"
-        fi
-    else
-        log_warn "Docker: Not found"
-        if [[ "$FIX" == "true" ]]; then
-            echo -e "${BLUE}💡 Install: https://docs.docker.com/get-docker/${NC}"
-        fi
-    fi
-
-    if command -v gh >/dev/null 2>&1; then
-        log_success "GitHub CLI: $(gh --version 2>&1 | head -1)"
-        found=$((found + 1))
-    else
-        log_warn "GitHub CLI (gh): Not found"
-        if [[ "$FIX" == "true" ]]; then
-            echo -e "${BLUE}💡 Install: https://cli.github.com/${NC}"
-        fi
-    fi
-
-    if [[ $found -gt 0 ]]; then return 0; else return 1; fi
-}
-
-test_dev_tools() {
-    log_info "Checking dev tools..."
-
-    local found=0
-
-    if command -v shellcheck >/dev/null 2>&1; then
-        log_success "ShellCheck: $(shellcheck --version 2>&1 | grep version: | head -1)"
-        found=$((found + 1))
-    else
-        log_warn "ShellCheck: Not found"
-        if [[ "$FIX" == "true" ]]; then
-            echo -e "${BLUE}💡 Install: sudo apt-get install shellcheck${NC}"
-        fi
-    fi
-
-    if command -v shfmt >/dev/null 2>&1; then
-        log_success "shfmt: $(shfmt --version 2>&1)"
-        found=$((found + 1))
-    else
-        log_warn "shfmt: Not found"
-        if [[ "$FIX" == "true" ]]; then
-            echo -e "${BLUE}💡 Install: go install mvdan.cc/sh/v3/cmd/shfmt@latest${NC}"
-        fi
-    fi
-
-    if command -v jq >/dev/null 2>&1; then
-        log_success "jq: $(jq --version 2>&1)"
-        found=$((found + 1))
-    fi
-
-    if command -v rg >/dev/null 2>&1; then
-        log_success "ripgrep: $(rg --version 2>&1 | head -1)"
-        found=$((found + 1))
-    fi
-
-    if command -v tree >/dev/null 2>&1; then
-        log_success "tree: Available"
-        found=$((found + 1))
-    fi
-
-    if [[ $found -gt 0 ]]; then return 0; else return 1; fi
-}
-
 test_openclaw() {
     log_info "Checking OpenClaw..."
     
@@ -528,37 +312,21 @@ show_summary() {
 }
 
 # Main execution
-echo -e "${MAGENTA}🧠 Neuro-Spicy Health Check (Full Stack)${NC}"
-echo -e "${MAGENTA}========================================${NC}"
+echo -e "${MAGENTA}🧠 Neuro-Spicy Health Check (Core Essentials)${NC}"
+echo -e "${MAGENTA}=============================================${NC}"
 echo ""
 
 # Run tests (wrapped in conditionals so set -e doesn't kill us on optional failures)
-# --- Core (required) ---
 if test_git; then git_result=0; else git_result=$?; fi
 if test_nodejs; then nodejs_result=0; else nodejs_result=$?; fi
 if test_python; then python_result=0; else python_result=$?; fi
 if test_github_token; then github_result=0; else github_result=$?; fi
-
-# --- Languages & frameworks ---
-if test_rust; then rust_result=0; else rust_result=$?; fi
-if test_typescript; then ts_result=0; else ts_result=$?; fi
-if test_astro_vite; then av_result=0; else av_result=$?; fi
-if test_playwright; then pw_result=0; else pw_result=$?; fi
-
-# --- Dev tools & AI ---
-if test_dev_tools; then devtools_result=0; else devtools_result=$?; fi
-if test_ai_cli; then ai_result=0; else ai_result=$?; fi
-
-# --- Editors ---
 if test_openclaw; then openclaw_result=0; else openclaw_result=$?; fi
 if test_cursor; then cursor_result=0; else cursor_result=$?; fi
 if test_vscode; then vscode_result=0; else vscode_result=$?; fi
 
 # Show summary
-show_summary "$git_result" "$nodejs_result" "$python_result" "$github_result" \
-    "$rust_result" "$ts_result" "$av_result" "$pw_result" \
-    "$devtools_result" "$ai_result" \
-    "$openclaw_result" "$cursor_result" "$vscode_result"
+show_summary "$git_result" "$nodejs_result" "$python_result" "$github_result" "$openclaw_result" "$cursor_result" "$vscode_result"
 
 if [[ "$VERBOSE" == "true" ]]; then
     echo ""
