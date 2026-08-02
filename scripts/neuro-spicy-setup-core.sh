@@ -213,38 +213,41 @@ setup_environment_variables() {
 }
 
 test_setup() {
+    local components="${1:-core}"
     log_info "Testing setup..."
-    
+
     local tests_passed=0
     local tests_total=0
-    
-    # Test Cursor config
-    ((tests_total++))
-    if [[ -f "$HOME/.config/Cursor/User/ai-behavior-rules.md" ]]; then
-        log_success "Cursor Config"
-        ((tests_passed++))
-    else
-        log_error "Cursor Config"
+
+    # Cursor and VSCode configs are only configured by 'core' and 'all' (the '*' case).
+    # Checking them after a 'minimal' run would always fail and falsely report setup failure.
+    if [[ "${components,,}" != "minimal" ]]; then
+        tests_total=$((tests_total + 1))
+        if [[ -f "$HOME/.config/Cursor/User/ai-behavior-rules.md" ]]; then
+            log_success "Cursor Config"
+            tests_passed=$((tests_passed + 1))
+        else
+            log_error "Cursor Config"
+        fi
+
+        tests_total=$((tests_total + 1))
+        if [[ -f "$HOME/.config/Code/User/settings.json" ]]; then
+            log_success "VSCode Config"
+            tests_passed=$((tests_passed + 1))
+        else
+            log_error "VSCode Config"
+        fi
     fi
-    
-    # Test VSCode config
-    ((tests_total++))
-    if [[ -f "$HOME/.config/Code/User/settings.json" ]]; then
-        log_success "VSCode Config"
-        ((tests_passed++))
-    else
-        log_error "VSCode Config"
-    fi
-    
-    # Test Git config
-    ((tests_total++))
+
+    # Git config is always verified regardless of component selection.
+    tests_total=$((tests_total + 1))
     if [[ -n "$(git config --global user.name 2>/dev/null)" ]]; then
         log_success "Git Config"
-        ((tests_passed++))
+        tests_passed=$((tests_passed + 1))
     else
         log_error "Git Config"
     fi
-    
+
     if [[ $tests_passed -eq $tests_total ]]; then
         return 0
     else
@@ -315,8 +318,8 @@ case "${COMPONENTS,,}" in
         ;;
 esac
 
-# Test setup
-if test_setup; then
+# Test setup (pass the selected component set so only installed pieces are verified)
+if test_setup "${COMPONENTS}"; then
     show_next_steps
 else
     log_error "Setup incomplete. Please check the errors above."

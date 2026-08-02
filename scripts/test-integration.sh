@@ -175,6 +175,29 @@ else
 fi
 
 # ============================================================
+# 6. Security regression: GITHUB_TOKEN must not be embedded in
+#    the user-profile template (Bug: world-readable credential file)
+# ============================================================
+log_test "Security: neuro-spicy-init.sh does not embed GITHUB_TOKEN in profile JSON"
+if grep -q '"githubToken".*GITHUB_TOKEN' "$SCRIPTS_DIR/neuro-spicy-init.sh" 2>/dev/null; then
+    log_fail "GITHUB_TOKEN is still embedded in create_user_profile() — credential leak risk"
+else
+    log_pass "GITHUB_TOKEN not embedded in user profile template"
+fi
+
+# ============================================================
+# 7. Correctness regression: --components minimal must exit 0
+#    (Bug: test_setup() checked Cursor/VSCode configs that minimal
+#    never installs, causing a false-failure exit on every run)
+# ============================================================
+log_test "--components minimal exits 0 (post-fix correctness check)"
+if bash "$SCRIPTS_DIR/neuro-spicy-setup-core.sh" --components minimal --skip-backup >/dev/null 2>&1; then
+    log_pass "--components minimal exits 0"
+else
+    log_fail "--components minimal exited non-zero — test_setup() may still be component-unaware"
+fi
+
+# ============================================================
 # Summary
 # ============================================================
 echo ""
