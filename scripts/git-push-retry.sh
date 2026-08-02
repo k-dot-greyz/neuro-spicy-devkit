@@ -90,16 +90,16 @@ if ! git rev-parse --git-dir >/dev/null 2>&1; then
     exit 1
 fi
 
-# --- Build push command (array for safe arg handling) ---
-PUSH_CMD=(git push -u "$REMOTE" "$BRANCH")
+# --- Build push command ---
+PUSH_CMD="git push -u ${REMOTE} ${BRANCH}"
 if [[ "$FORCE" == "true" ]]; then
-    PUSH_CMD=(git push -u --force-with-lease "$REMOTE" "$BRANCH")
+    PUSH_CMD="git push -u --force-with-lease ${REMOTE} ${BRANCH}"
 fi
 
 # --- Dry run ---
 if [[ "$DRY_RUN" == "true" ]]; then
     echo -e "${YELLOW}🔍 DRY RUN — would execute:${NC}"
-    echo -e "${CYAN}  ${PUSH_CMD[*]}${NC}"
+    echo -e "${CYAN}  ${PUSH_CMD}${NC}"
     echo -e "${CYAN}  Remote: ${REMOTE}${NC}"
     echo -e "${CYAN}  Branch: ${BRANCH}${NC}"
     echo -e "${CYAN}  Max retries: ${MAX_RETRIES}${NC}"
@@ -116,7 +116,7 @@ backoff=4
 while [[ $attempt -le $MAX_RETRIES ]]; do
     echo -e "${CYAN}  Attempt ${attempt}/${MAX_RETRIES}...${NC}"
 
-    if "${PUSH_CMD[@]}" 2>&1; then
+    if $PUSH_CMD 2>&1; then
         echo -e "${GREEN}✅ Push successful on attempt ${attempt}${NC}"
         exit 0
     fi

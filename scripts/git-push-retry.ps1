@@ -36,17 +36,18 @@ if ($Help) {
 
 # Resolve branch
 if ([string]::IsNullOrEmpty($Branch)) {
-    $Branch = git rev-parse --abbrev-ref HEAD 2>&1
-    if ($LASTEXITCODE -ne 0) {
+    try {
+        $Branch = (git rev-parse --abbrev-ref HEAD 2>&1).Trim()
+    } catch {
         Write-ColorOutput "❌ Not in a git repository or unable to determine current branch" "Red"
         exit 1
     }
-    $Branch = $Branch.Trim()
 }
 
 # Verify git state
-$null = git rev-parse --git-dir 2>&1
-if ($LASTEXITCODE -ne 0) {
+try {
+    git rev-parse --git-dir 2>&1 | Out-Null
+} catch {
     Write-ColorOutput "❌ Not in a git repository" "Red"
     exit 1
 }
