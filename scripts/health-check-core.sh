@@ -175,66 +175,20 @@ test_python() {
     fi
 }
 
-test_secrets() {
-    log_info "Checking secrets and API keys..."
-
-    local creds_file="$HOME/.config/neuro-spicy/credentials"
-    local missing=0
-    local total=0
-
-    # --- GitHub token ---
-    total=$((total + 1))
+test_github_token() {
+    log_info "Checking GitHub token..."
+    
     if [[ -n "${GITHUB_TOKEN:-}" ]]; then
-        log_success "GITHUB_TOKEN: Set"
-    elif [[ -f "$creds_file" ]]; then
-        log_warn "GITHUB_TOKEN: Not in env (found creds file — source it)"
-        if [[ "$FIX" == "true" ]]; then
-            echo -e "${BLUE}💡 Run: source ${creds_file}${NC}"
-            echo -e "${BLUE}💡 Or add to ~/.bashrc: [ -f ${creds_file} ] && source ${creds_file}${NC}"
-        fi
-        missing=$((missing + 1))
+        log_success "GitHub token: Set"
+        return 0
     else
-        log_warn "GITHUB_TOKEN: Not set"
+        log_warn "GitHub token: Not set"
         if [[ "$FIX" == "true" ]]; then
-            echo -e "${BLUE}💡 Run: ./scripts/setup-github-token.sh${NC}"
-            echo -e "${BLUE}💡 Or: export GITHUB_TOKEN='ghp_...'${NC}"
+            echo -e "${BLUE}💡 Set: export GITHUB_TOKEN='your_token_here'${NC}"
+            echo -e "${BLUE}💡 Or: ./scripts/setup-github-token.sh${NC}"
         fi
-        missing=$((missing + 1))
+        return 1
     fi
-
-    # --- AI provider keys (at least one needed for OpenClaw/AI CLI) ---
-    total=$((total + 1))
-    if [[ -n "${ANTHROPIC_API_KEY:-}" ]]; then
-        log_success "ANTHROPIC_API_KEY: Set (Claude)"
-    elif [[ -n "${OPENAI_API_KEY:-}" ]]; then
-        log_success "OPENAI_API_KEY: Set (GPT)"
-    elif [[ -n "${GOOGLE_API_KEY:-}" ]]; then
-        log_success "GOOGLE_API_KEY: Set (Gemini)"
-    elif [[ -n "${OPENROUTER_API_KEY:-}" ]]; then
-        log_success "OPENROUTER_API_KEY: Set (OpenRouter)"
-    else
-        log_warn "AI provider key: None set"
-        if [[ "$FIX" == "true" ]]; then
-            echo -e "${BLUE}💡 Set one of: ANTHROPIC_API_KEY, OPENAI_API_KEY, GOOGLE_API_KEY, OPENROUTER_API_KEY${NC}"
-            echo -e "${BLUE}💡 For OpenClaw Docker: cp portable-dev-env/openclaw/docker/.env.example .env${NC}"
-        fi
-        missing=$((missing + 1))
-    fi
-
-    # --- SSH key (for git operations) ---
-    total=$((total + 1))
-    if [[ -f "$HOME/.ssh/id_ed25519" ]] || [[ -f "$HOME/.ssh/id_rsa" ]]; then
-        log_success "SSH key: Found"
-    else
-        log_warn "SSH key: Not found"
-        if [[ "$FIX" == "true" ]]; then
-            echo -e "${BLUE}💡 Generate: ssh-keygen -t ed25519 -C 'your@email.com'${NC}"
-            echo -e "${BLUE}💡 Then add to GitHub: https://github.com/settings/keys${NC}"
-        fi
-        missing=$((missing + 1))
-    fi
-
-    if [[ $missing -eq 0 ]]; then return 0; else return 1; fi
 }
 
 test_cursor() {
@@ -583,7 +537,7 @@ echo ""
 if test_git; then git_result=0; else git_result=$?; fi
 if test_nodejs; then nodejs_result=0; else nodejs_result=$?; fi
 if test_python; then python_result=0; else python_result=$?; fi
-if test_secrets; then secrets_result=0; else secrets_result=$?; fi
+if test_github_token; then github_result=0; else github_result=$?; fi
 
 # --- Languages & frameworks ---
 if test_rust; then rust_result=0; else rust_result=$?; fi
@@ -601,7 +555,7 @@ if test_cursor; then cursor_result=0; else cursor_result=$?; fi
 if test_vscode; then vscode_result=0; else vscode_result=$?; fi
 
 # Show summary
-show_summary "$git_result" "$nodejs_result" "$python_result" "$secrets_result" \
+show_summary "$git_result" "$nodejs_result" "$python_result" "$github_result" \
     "$rust_result" "$ts_result" "$av_result" "$pw_result" \
     "$devtools_result" "$ai_result" \
     "$openclaw_result" "$cursor_result" "$vscode_result"
