@@ -240,10 +240,15 @@ flowchart LR
 
 | Issue | Suggested labels |
 |-------|------------------|
-| #8 OpenClaw curl bash | `security`, `unsafe-io`, `wave-1-sanitize-io`, `lane-bash`, `area-bash` |
-| #9 PS1 PAT in JSON | `security`, `credentials`, `wave-1-sanitize-io`, `lane-powershell`, `area-profiles` |
-| #11 Docker cp | `bug`, `wave-1-sanitize-io`, `lane-docker`, `area-docker` |
+| #8 OpenClaw curl bash | `security`, `unsafe-io`, `wave-1-sanitize-io`, `lane-bash`, `area-bash`, `task` |
+| #9 PS1 PAT in JSON | `security`, `credentials`, `wave-1-sanitize-io`, `lane-powershell`, `area-profiles`, `task` |
+| #10 PS1 token escaping | `security`, `wave-1-sanitize-io`, `lane-powershell`, `area-powershell`, `task` |
+| #11 Docker cp | `bug`, `wave-1-sanitize-io`, `lane-docker`, `area-docker`, `task` |
+| #12 OpenClaw health `set -e` | `security`, `wave-1-sanitize-io`, `lane-bash`, `area-bash`, `task` |
+| #17 SEC-001 keychain / no PAT in JSON | `security`, `credentials`, `wave-1-sanitize-io`, `lane-bash`, `lane-powershell`, `area-profiles`, `task` |
 | #20 Epic orchestrator | `epic`, `wave-3-epic`, `merge-train` |
 | TDD libs | `task`, `wave-2-resolver`, `lane-tdd`, `tdd-phase-1` … `tdd-phase-5` |
+
+Pre-filled Wave 1 bodies + apply script: [WAVE_1_SANITIZE.md](WAVE_1_SANITIZE.md) · [github-issues/wave-1/](github-issues/wave-1/README.md)
 
 See also [tasks.md](../tasks.md), [TDD_ORCHESTRATION.md](TDD_ORCHESTRATION.md), [AGENTS.md](../AGENTS.md).
