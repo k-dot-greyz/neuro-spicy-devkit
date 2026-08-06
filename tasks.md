@@ -1,5 +1,7 @@
 # Epic #20 — TDD implementation backlog
 
+Issue/PR labels, merge train, and linking: [docs/LABELS_AND_LINKING.md](docs/LABELS_AND_LINKING.md).
+
 ## Guiding user story (MVP)
 
 **As a** neuro-spicy developer on a fresh machine,  

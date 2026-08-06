@@ -1,0 +1,141 @@
+# Canonical labels — synced to GitHub via .github/workflows/sync-labels.yml
+# Edit here, merge to main; do not create ad-hoc labels in the UI without updating this file.
+
+# --- GitHub defaults (descriptions normalized) ---
+- name: bug
+  color: d73a4a
+  description: Something isn't working
+- name: documentation
+  color: 0075ca
+  description: Improvements or additions to documentation
+- name: duplicate
+  color: cfd3d7
+  description: This issue or pull request already exists
+- name: enhancement
+  color: a2eeef
+  description: New feature or request
+- name: good first issue
+  color: 7057ff
+  description: Good for newcomers
+- name: help wanted
+  color: 008672
+  description: Extra attention is needed
+- name: invalid
+  color: e4e669
+  description: This doesn't seem right
+- name: question
+  color: d876e3
+  description: Further information is requested
+- name: wontfix
+  color: ffffff
+  description: This will not be worked on
+
+# --- Type ---
+- name: epic
+  color: 5319e7
+  description: Multi-PR program slice; checklist in issue body
+- name: task
+  color: 1d76db
+  description: Single deliverable; usually one PR
+- name: chore
+  color: c2e0c6
+  description: Repo hygiene, tooling, labels, templates
+- name: ci
+  color: 0052cc
+  description: CI workflows, hooks, test harness
+- name: security
+  color: b60205
+  description: Credentials, unsafe IO, supply chain
+- name: audit
+  color: fbca04
+  description: Audit tracker or compliance documentation
+
+# --- Gate / wave ---
+- name: wave-0-merge
+  color: 006b75
+  description: Foundation merge only — CI green, no feature scope
+- name: wave-1-sanitize-io
+  color: e99695
+  description: Unsafe IO, PAT, docker hardening (issues 8–12, 17)
+- name: wave-2-resolver
+  color: bfdadc
+  description: ns-resolver dry-run, aliases, profile contracts
+- name: wave-3-epic
+  color: c5def5
+  description: Epic 20 feature installs — MCP, stack orchestration
+
+# --- Parallel lanes ---
+- name: lane-bash
+  color: 2cbe4e
+  description: Owns bash scripts and init.sh paths
+- name: lane-powershell
+  color: 5319e7
+  description: Owns PowerShell scripts and init.ps1 paths
+- name: lane-docker
+  color: 0366d6
+  description: Owns OpenClaw docker and compose
+- name: lane-tdd
+  color: f9d0c4
+  description: Owns tests/ and scripts/lib/ns-*.sh
+
+# --- Area ---
+- name: area-bash
+  color: 0e8a16
+  description: Bash subsystem
+- name: area-powershell
+  color: 6f42c1
+  description: PowerShell subsystem
+- name: area-docker
+  color: 1d76db
+  description: Containers and compose
+- name: area-ci
+  color: 0052cc
+  description: GitHub Actions and pre-commit
+- name: area-profiles
+  color: d4c5f9
+  description: portable-dev-env/profiles and hydration
+- name: area-mcp
+  color: bfe5bf
+  description: MCP servers and configuration
+
+# --- TDD phases (tasks.md) ---
+- name: tdd-phase-0
+  color: ededed
+  description: TDD phase 0 — harness and CI
+- name: tdd-phase-1
+  color: ededed
+  description: TDD phase 1 — exit codes, semver, CLI flags
+- name: tdd-phase-2
+  color: ededed
+  description: TDD phase 2 — profile and health wiring
+- name: tdd-phase-3
+  color: ededed
+  description: TDD phase 3 — resolver dry-run
+- name: tdd-phase-4
+  color: ededed
+  description: TDD phase 4 — aliases and MCP integration
+- name: tdd-phase-5
+  color: ededed
+  description: TDD phase 5 — PowerShell parity
+
+# --- Merge train status ---
+- name: merge-train
+  color: fbca04
+  description: Active stacked merge sequence
+- name: safe-to-stack
+  color: 0e8a16
+  description: Expected to rebase cleanly on train head
+- name: blocked
+  color: d93f0b
+  description: Waiting on another issue or PR — name blocker in body
+- name: superseded
+  color: 666666
+  description: Do not merge; see replacement PR in body
+
+# --- Risk ---
+- name: unsafe-io
+  color: b60205
+  description: curl pipe bash, unverified remote install
+- name: credentials
+  color: ee0701
+  description: Tokens, PAT, neuro-spicy credentials dir

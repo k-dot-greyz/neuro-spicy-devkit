@@ -1,0 +1,63 @@
+name: Task (single PR)
+description: One deliverable — usually one focused PR
+title: "[Task] "
+labels:
+  - task
+body:
+  - type: markdown
+    attributes:
+      value: |
+        Pair with a PR using the same title prefix. Link the epic with **Part of #N** in the PR, not `Closes` unless this task is the whole issue.
+  - type: dropdown
+    id: wave
+    attributes:
+      label: Gate / wave
+      options:
+        - wave-0-merge
+        - wave-1-sanitize-io
+        - wave-2-resolver
+        - wave-3-epic
+    validations:
+      required: true
+  - type: dropdown
+    id: lane
+    attributes:
+      label: Primary lane
+      options:
+        - lane-bash
+        - lane-powershell
+        - lane-docker
+        - lane-tdd
+    validations:
+      required: true
+  - type: dropdown
+    id: tdd_phase
+    attributes:
+      label: TDD phase (if applicable)
+      options:
+        - none
+        - tdd-phase-0
+        - tdd-phase-1
+        - tdd-phase-2
+        - tdd-phase-3
+        - tdd-phase-4
+        - tdd-phase-5
+  - type: textarea
+    id: acceptance
+    attributes:
+      label: Acceptance criteria
+      description: Testable outcomes (include exit codes / dry-run if relevant)
+    validations:
+      required: true
+  - type: textarea
+    id: links
+    attributes:
+      label: Links
+      description: "Parent epic: #20 | Depends on: #8 | Blocks: ..."
+    validations:
+      required: true
+  - type: textarea
+    id: files
+    attributes:
+      label: File ownership (avoid double work)
+      description: Paths this task owns — other agents should not edit these in the same wave

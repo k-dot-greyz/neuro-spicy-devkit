@@ -1,0 +1,53 @@
+issues:
+  - number: 8
+    body_file: docs/github-issues/wave-1/issue-8.md
+    labels:
+      - security
+      - unsafe-io
+      - wave-1-sanitize-io
+      - lane-bash
+      - area-bash
+      - task
+  - number: 9
+    body_file: docs/github-issues/wave-1/issue-9.md
+    labels:
+      - security
+      - credentials
+      - wave-1-sanitize-io
+      - lane-powershell
+      - area-profiles
+      - task
+  - number: 10
+    body_file: docs/github-issues/wave-1/issue-10.md
+    labels:
+      - security
+      - wave-1-sanitize-io
+      - lane-powershell
+      - area-powershell
+      - task
+  - number: 11
+    body_file: docs/github-issues/wave-1/issue-11.md
+    labels:
+      - bug
+      - wave-1-sanitize-io
+      - lane-docker
+      - area-docker
+      - task
+  - number: 12
+    body_file: docs/github-issues/wave-1/issue-12.md
+    labels:
+      - security
+      - wave-1-sanitize-io
+      - lane-bash
+      - area-bash
+      - task
+  - number: 17
+    body_file: docs/github-issues/wave-1/issue-17.md
+    labels:
+      - security
+      - credentials
+      - wave-1-sanitize-io
+      - lane-bash
+      - lane-powershell
+      - area-profiles
+      - task
