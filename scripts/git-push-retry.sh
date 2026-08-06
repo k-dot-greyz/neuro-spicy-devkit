@@ -45,7 +45,7 @@ show_help() {
 while [[ $# -gt 0 ]]; do
     case $1 in
         --branch|-b)
-            if [[ -z "$2" ]] || [[ "$2" =~ ^- ]]; then
+            if [[ $# -lt 2 ]] || [[ -z "${2:-}" ]] || [[ "${2:-}" =~ ^- ]]; then
                 echo -e "${RED}ERROR: --branch requires a branch name${NC}"
                 exit 1
             fi
@@ -53,7 +53,7 @@ while [[ $# -gt 0 ]]; do
             shift 2
             ;;
         --remote|-r)
-            if [[ -z "$2" ]] || [[ "$2" =~ ^- ]]; then
+            if [[ $# -lt 2 ]] || [[ -z "${2:-}" ]] || [[ "${2:-}" =~ ^- ]]; then
                 echo -e "${RED}ERROR: --remote requires a remote name${NC}"
                 exit 1
             fi
@@ -61,8 +61,8 @@ while [[ $# -gt 0 ]]; do
             shift 2
             ;;
         --retries|-n)
-            if ! [[ "$2" =~ ^[0-9]+$ ]]; then
-                echo -e "${RED}ERROR: --retries requires a numeric value, got '$2'${NC}"
+            if [[ $# -lt 2 ]] || ! [[ "${2:-}" =~ ^[0-9]+$ ]]; then
+                echo -e "${RED}ERROR: --retries requires a numeric value, got '${2:-}'${NC}"
                 exit 1
             fi
             MAX_RETRIES="$2"
