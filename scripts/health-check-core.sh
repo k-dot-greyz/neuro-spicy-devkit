@@ -5,6 +5,10 @@
 
 set -euo pipefail
 
+SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
+# shellcheck source=lib/ns-exit-codes.sh
+source "$SCRIPT_DIR/lib/ns-exit-codes.sh"
+
 # --- Color Definitions (Neuro-Spicy Standard) ---
 RED='\033[0;31m'
 GREEN='\033[0;32m'
@@ -61,7 +65,7 @@ while [[ $# -gt 0 ]]; do
             ;;
         *)
             echo "Unknown option: $1"
-            exit 1
+            exit "$NS_EXIT_ERROR"
             ;;
     esac
 done
@@ -614,3 +618,21 @@ if [[ "$VERBOSE" == "true" ]]; then
     echo "Shell: $SHELL"
     echo "Working Directory: $(pwd)"
 fi
+
+core_failed=0
+for core_result in "$git_result" "$nodejs_result" "$python_result"; do
+    if [[ "$core_result" != "0" ]]; then
+        core_failed=1
+        break
+    fi
+done
+
+if [[ $core_failed -eq 1 ]]; then
+    exit "$NS_EXIT_MISSING_DEP"
+fi
+
+if [[ "$secrets_result" != "0" ]]; then
+    exit "$NS_EXIT_CONFIG"
+fi
+
+exit "$NS_EXIT_SUCCESS"
