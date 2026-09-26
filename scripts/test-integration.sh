@@ -44,15 +44,14 @@ else
     log_fail "raw.githubusercontent.com unreachable"
 fi
 
+# Public REST, not `gh`: GHA images ship gh but this job does not pass GH_TOKEN,
+# so `gh api` fails even though the repo is public (red on main since 2026-08-02).
 log_test "GitHub API access"
-if command -v gh >/dev/null 2>&1; then
-    if gh api "repos/${REPO}" --jq '.visibility' 2>/dev/null | grep -q "public"; then
-        log_pass "gh api confirms public repo"
-    else
-        log_fail "gh api failed or repo not public"
-    fi
+if repo_json=$(curl -sf --proto '=https' --tlsv1.2 "https://api.github.com/repos/${REPO}") &&
+    echo "$repo_json" | jq -e '.private == false' >/dev/null; then
+    log_pass "GitHub API confirms public repo"
 else
-    log_skip "gh CLI not installed"
+    log_fail "GitHub API failed or repo not public"
 fi
 
 # ============================================================
